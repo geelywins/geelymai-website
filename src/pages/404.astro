@@ -1,0 +1,11 @@
+---
+import Base from '../layouts/Base.astro';
+import { href } from '../lib/url';
+---
+<Base title="Halaman tidak ditemukan" description="Halaman yang Anda cari tidak ditemukan." noindex={true}>
+  <section><div class="container prose text-center">
+    <h1 class="display-3 fw-bold">404</h1>
+    <p>Halaman tidak ditemukan.</p>
+    <a class="btn btn-brand btn-lg" href={href('/')}>Kembali ke Beranda</a>
+  </div></section>
+</Base>

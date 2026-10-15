@@ -1,0 +1,30 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import { getLiveArticles } from '../../lib/articles';
+import { CONTENT } from '../../config';
+import { href, asset } from '../../lib/url';
+
+const P = CONTENT.halamanArtikel;
+const fmt = (d: Date) => d.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+const artikel = (await getLiveArticles()).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+<Base title="Artikel & Tips Seputar Mobil Geely" description={P.seoDeskripsi}>
+  <PageHead title={P.judul} text={P.teks} crumbs={[{ label: 'Artikel' }]} />
+  <section><div class="container">
+    {artikel.length === 0 && <p class="text-muted">Belum ada artikel.</p>}
+    <div class="grid-x">
+      {artikel.map((a, i) => (
+        <a class="card-x reveal" style={`--d:${(i % 3) * 0.07}s`} href={href(`/artikel/${a.id}/`)}>
+          <div class="card-media wide"><img src={asset(a.data.image || `/img/artikel/${a.id}/sampul.png`)} alt={a.data.title} loading="lazy" decoding="async" width="640" height="400" /></div>
+          <div class="card-body-x">
+            <span class="tag">{a.data.category}</span>
+            <h2 class="card-title-x">{a.data.title}</h2>
+            <p>{a.data.description}</p>
+            <span class="meta">{fmt(a.data.date)}</span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div></section>
+</Base>

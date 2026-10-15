@@ -1,0 +1,38 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import SocialIcons from '../components/SocialIcons.astro';
+import Icon from '../components/Icon.astro';
+import { SITE, CONTENT, waLink, phoneDisplay } from '../config';
+import { href, slugify } from '../lib/url';
+
+const K = CONTENT.kontak;
+---
+<Base title="Kontak Sales Geely & Lokasi Dealer" description={K.seoDeskripsi}>
+  <PageHead title={K.judul} text={K.teks} crumbs={[{ label: 'Kontak' }]} />
+  <section>
+    <div class="container prose">
+      <p><a class="btn btn-wa btn-lg" href={waLink()} target="_blank" rel="noopener"><Icon name="whatsapp" size={20} /> Chat WhatsApp {phoneDisplay}</a></p>
+      {SITE.email && <p>Email: <a href={`mailto:${SITE.email}`}>{SITE.email}</a></p>}
+
+      <h2>Media Sosial</h2>
+      <SocialIcons items={SITE.sosmed} size={24} class="soc-lg" />
+
+      <h2>Lokasi Dealer</h2>
+      <ul>{SITE.locations.map((l) => <li><a href={href(`/lokasi/${slugify(l.nama)}/`)}><strong>{l.nama}</strong></a> - {l.area}</li>)}</ul>
+      {SITE.locations.map((l) => (
+        <div class="map-wrap"><iframe src={`https://www.google.com/maps?q=${encodeURIComponent((l.maps && l.maps.trim()) || `${l.nama} ${l.area}`)}&output=embed`} title={`Peta ${l.nama}`} loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe></div>
+      ))}
+
+      <h2>{K.layananJudul}</h2>
+      <ul>{K.layanan.map((l) => <li>{l}</li>)}</ul>
+
+      {SITE.situsLain.length > 0 && (
+        <>
+          <h2>Website Lainnya</h2>
+          {SITE.situsLain.map((s) => <a class="site-card" href={s.url} target="_blank" rel="noopener"><b>{s.nama}</b><small>{s.deskripsi}</small></a>)}
+        </>
+      )}
+    </div>
+  </section>
+</Base>
