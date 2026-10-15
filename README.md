@@ -1,6 +1,6 @@
 # Website Geely MAI Jakarta
 
-Website sales Geely berbasis Astro (HTML statis, sangat bagus untuk SEO), hosting gratis di GitHub Pages. **Semua isi website diatur lewat halaman admin di browser HP**, tanpa membuka kode.
+Website sales Geely berbasis Astro (HTML statis, sangat bagus untuk SEO), hosting gratis di GitHub Pages. **Semua isi website diatur lewat panel admin baru (Geely MAI Studio: model, promo, banner, testimoni, serah terima, prospek, pengaturan, upload ZIP; tanpa artikel) di browser HP**, tanpa membuka kode.
 
 ## Yang bisa diatur dari halaman admin
 
