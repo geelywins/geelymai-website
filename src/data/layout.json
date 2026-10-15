@@ -1,0 +1,13 @@
+{
+  "beranda": [
+    {"id": "slider", "aktif": true},
+    {"id": "stats", "aktif": true},
+    {"id": "model", "aktif": true},
+    {"id": "promo", "aktif": true},
+    {"id": "delivery", "aktif": true},
+    {"id": "keunggulan", "aktif": true},
+    {"id": "testimoni", "aktif": true},
+    {"id": "artikel", "aktif": true},
+    {"id": "faq", "aktif": true}
+  ]
+}

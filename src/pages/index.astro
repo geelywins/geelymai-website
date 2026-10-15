@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import { getLiveArticles } from '../lib/articles';
-import { MODELS, ACTIVE_PROMOS, SLIDES, TESTIMONI, DELIVERY } from '../lib/data';
+import { MODELS, ACTIVE_PROMOS, SLIDES, TESTIMONI, DELIVERY, BERANDA_LAYOUT } from '../lib/data';
 import { SITE, CONTENT, waLink } from '../config';
 import { href, asset, splitHighlight, smartLink } from '../lib/url';
 import ModelCard from '../components/ModelCard.astro';
@@ -29,11 +29,16 @@ const jsonLd = [
     mainEntity: B.faq.map((f) => ({ '@type': 'Question', name: f.tanya, acceptedAnswer: { '@type': 'Answer', text: f.jawab } })),
   },
 ];
+const urutan = BERANDA_LAYOUT.filter((s) => s.aktif).map((s) => s.id);
+const BG_IDS = ['keunggulan', 'testimoni', 'artikel', 'faq'];
+const bgMap: Record<string, string> = {};
 let alt = false;
-const bg = () => ((alt = !alt) ? 'sec-alt' : '');
+for (const id of urutan) if (BG_IDS.includes(id)) { alt = !alt; bgMap[id] = alt ? 'sec-alt' : ''; }
 ---
 
 <Base title={B.seoJudul || `${SITE.tagline} - Harga, Promo, Test Drive`} description={B.seoDeskripsi || SITE.description} jsonLd={jsonLd}>
+  <div class="beranda-flow">
+  {urutan.includes('slider') && (<div class="bf" style={`order:${urutan.indexOf('slider')}`}>
   {SLIDES.length > 0 && (
     <section class="hero-slider" data-slider aria-roledescription="carousel" aria-label="Sorotan" style="padding:0">
       {SLIDES.map((s, i) => {
@@ -75,21 +80,27 @@ const bg = () => ((alt = !alt) ? 'sec-alt' : '');
       {SLIDES.length > 1 && <div class="slider-bar"></div>}
     </section>
   )}
+  </div>)}
 
+  {urutan.includes('stats') && (<div class="bf" style={`order:${urutan.indexOf('stats')}`}>
   <section class="stats-strip">
     <div class="container">
       <div class="stats-grid">
       {B.stats.map((s, i) => <div class="stat reveal" style={`--d:${i * 0.08}s`}><b>{s.angka}</b><span>{s.teks}</span></div>)}
     </div></div>
   </section>
+  </div>)}
 
+  {urutan.includes('model') && (<div class="bf" style={`order:${urutan.indexOf('model')}`}>
   <section>
     <div class="container">
       <SectionHead title={B.modelJudul} text={B.modelTeks} />
       <div class="grid-x">{MODELS.map((m, i) => <ModelCard m={m} delay={i * 0.07} />)}</div>
     </div>
   </section>
+  </div>)}
 
+  {urutan.includes('promo') && (<div class="bf" style={`order:${urutan.indexOf('promo')}`}>
   {promos.length > 0 && (
     <section class="sec-alt">
       <div class="container">
@@ -99,7 +110,9 @@ const bg = () => ((alt = !alt) ? 'sec-alt' : '');
       </div>
     </section>
   )}
+  </div>)}
 
+  {urutan.includes('delivery') && (<div class="bf" style={`order:${urutan.indexOf('delivery')}`}>
   {delivery.length > 0 && (
     <section>
       <div class="container">
@@ -109,8 +122,10 @@ const bg = () => ((alt = !alt) ? 'sec-alt' : '');
       </div>
     </section>
   )}
+  </div>)}
 
-  <section class={bg()}>
+  {urutan.includes('keunggulan') && (<div class="bf" style={`order:${urutan.indexOf('keunggulan')}`}>
+  <section class={bgMap['keunggulan']}>
     <div class="container">
       <SectionHead title={B.keunggulanJudul} />
       <div class="grid-x">
@@ -118,9 +133,11 @@ const bg = () => ((alt = !alt) ? 'sec-alt' : '');
       </div>
     </div>
   </section>
+  </div>)}
 
+  {urutan.includes('testimoni') && (<div class="bf" style={`order:${urutan.indexOf('testimoni')}`}>
   {testi.length > 0 && (
-    <section class={bg()}>
+    <section class={bgMap['testimoni']}>
       <div class="container">
         <SectionHead title={B.testimoniJudul} text={B.testimoniTeks} />
         <Rail auto={5000} width={320} label="Testimoni pelanggan">{testi.map((t) => <TestimoniCard t={t} />)}</Rail>
@@ -128,9 +145,11 @@ const bg = () => ((alt = !alt) ? 'sec-alt' : '');
       </div>
     </section>
   )}
+  </div>)}
 
+  {urutan.includes('artikel') && (<div class="bf" style={`order:${urutan.indexOf('artikel')}`}>
   {artikel.length > 0 && (
-    <section class={bg()}>
+    <section class={bgMap['artikel']}>
       <div class="container">
         <SectionHead title={B.artikelJudul} text={B.artikelTeks} />
         <Rail rows={2} width={300} label="Artikel terbaru">
@@ -150,8 +169,10 @@ const bg = () => ((alt = !alt) ? 'sec-alt' : '');
       </div>
     </section>
   )}
+  </div>)}
 
-  <section class={bg()}>
+  {urutan.includes('faq') && (<div class="bf" style={`order:${urutan.indexOf('faq')}`}>
+  <section class={bgMap['faq']}>
     <div class="container prose">
       <SectionHead title={B.faqJudul} />
       <div class="faq">
@@ -164,7 +185,10 @@ const bg = () => ((alt = !alt) ? 'sec-alt' : '');
       </div>
     </div>
   </section>
+  </div>)}
 
+  </div>
+  <style is:global>.beranda-flow{display:flex;flex-direction:column}.beranda-flow>.bf{width:100%}</style>
   <script>
     import '../scripts/slider.ts';
     import '../scripts/rail2.ts';

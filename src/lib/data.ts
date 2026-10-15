@@ -47,3 +47,14 @@ export const TESTIMONI: Testimoni[] = (fill(defaults.testimoni, file('testimoni'
 export const DELIVERY: Delivery[] = (fill(defaults.delivery, file('delivery')) as Delivery[])
   .filter((d) => d.aktif && d.foto)
   .sort((a, b) => String(b.tanggal || '').localeCompare(String(a.tanggal || '')));
+
+// Urutan & tampil/sembunyi bagian beranda (diatur dari admin > Tata Letak Beranda)
+export const BERANDA_BAWAAN = ['slider', 'stats', 'model', 'promo', 'delivery', 'keunggulan', 'testimoni', 'artikel', 'faq'];
+export interface BagianBeranda { id: string; aktif: boolean }
+export const BERANDA_LAYOUT: BagianBeranda[] = (() => {
+  const f = file('layout');
+  const saved: BagianBeranda[] = Array.isArray(f?.beranda) ? f.beranda : [];
+  const out: BagianBeranda[] = saved.filter((s) => BERANDA_BAWAAN.includes(s.id)).map((s) => ({ id: s.id, aktif: s.aktif !== false }));
+  for (const id of BERANDA_BAWAAN) if (!out.some((o) => o.id === id)) out.push({ id, aktif: true });
+  return out;
+})();

@@ -148,3 +148,9 @@ Delivery moment dan testimoni bergeser otomatis ke kiri tiap 5 detik (berhenti s
 - Paragraf pertama artikel tampil sebagai kotak "Ringkasan" (40-60 kata). Validator: `node scripts-validate.mjs`.
 - Halaman lokasi: /lokasi/ dan /lokasi/nama-lokasi/ dengan peta Google Maps. Alamat lengkap, kata kunci peta, dan jam buka diisi di Admin, Pengaturan, Lokasi dealer.
 - Setiap kolom foto di Admin menampilkan ukuran standar dan memberi peringatan kalau foto yang dipilih terlalu kecil atau proporsinya berbeda.
+
+## Panel admin (Geely MAI Studio)
+- **Artikel**: tulis/ubah artikel, analisis SEO langsung (skor 0-100 + saran), standar ukuran gambar, status Draft / Terbit / Terjadwal (tayang otomatis, website dibangun ulang tiap hari 05.30 WIB).
+- **SEO & Ranking**: skor semua artikel, pasang domain (`public/CNAME`), pasang workflow laporan, hasil Search Console (klik, tayang, posisi kata kunci), link rusak, kecepatan. Perlu secret `GSC_KEY` setelah domain aktif.
+- **Tata Letak Beranda**: urutan dan tampil/sembunyi tiap bagian beranda (`src/data/layout.json`).
+- **Teks & Komponen**: semua teks beranda, halaman, kontak, footer, popup (`src/data/content.json`).

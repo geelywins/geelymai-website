@@ -81,7 +81,13 @@ textarea{min-height:90px;resize:vertical}
 table{width:100%;border-collapse:collapse}
 th,td{padding:9px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;font-size:14px}
 th{color:var(--mut);font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+.szb{font-size:12px;color:#0b5cad;background:#eef5ff;border-radius:8px;padding:6px 9px;margin-top:6px}
+.seohead{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px;font-size:14px}
+.seoi{padding:7px 0;border-bottom:1px solid var(--line);font-size:13.5px}
+.seoi.ok b{color:var(--ok)}.seoi.no b{color:var(--bad)}
+.seoi small{display:block;color:var(--mut);margin-top:2px}
 .menu-btn{display:none}
+@media(max-width:1000px){#ed2{grid-template-columns:1fr!important}}
 @media(max-width:820px){
  #app{grid-template-columns:1fr}
  aside{position:fixed;inset:0 auto 0 0;width:250px;z-index:40;transform:translateX(-105%);transition:.2s;box-shadow:0 0 40px rgba(0,0,0,.2)}
@@ -118,7 +124,12 @@ th{color:var(--mut);font-size:12px;text-transform:uppercase;letter-spacing:.05em
       <small>Produk</small>
       <button data-v="models">🚗 Model &amp; Harga</button>
       <button data-v="promo">🏷️ Promo</button>
+      <small>Konten &amp; SEO</small>
+      <button data-v="artikel">📝 Artikel</button>
+      <button data-v="seo">📈 SEO &amp; Ranking</button>
       <small>Tampilan</small>
+      <button data-v="layout">🧩 Tata Letak Beranda</button>
+      <button data-v="teks">✏️ Teks &amp; Komponen</button>
       <button data-v="slider">🖼️ Banner Beranda</button>
       <button data-v="testimoni">💬 Testimoni</button>
       <button data-v="delivery">🎁 Serah Terima</button>
@@ -172,19 +183,6 @@ async function save(name,val,msg){
   var r=await gh('contents/src/data/'+name+'.json',{method:'PUT',body:JSON.stringify(body)});
   CACHE[name]={val:val,sha:r.content.sha};
 }
-async function uploadImage(file,folder){
-  var url=URL.createObjectURL(file),im=new Image();
-  await new Promise(function(r,j){im.onload=r;im.onerror=j;im.src=url});
-  var w=im.naturalWidth,h=im.naturalHeight,m=1600,k=Math.min(1,m/Math.max(w,h));
-  var cv=document.createElement('canvas');cv.width=Math.round(w*k);cv.height=Math.round(h*k);
-  cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);URL.revokeObjectURL(url);
-  var blob=await new Promise(function(r){cv.toBlob(r,'image/jpeg',.86)});
-  if(!blob)throw new Error('Gagal memproses gambar');
-  var name=(slugify(file.name.replace(/\.[^.]+$/,''))||'foto')+'-'+Date.now().toString(36)+'.jpg';
-  await gh('contents/public/images/'+folder+'/'+name,{method:'PUT',body:JSON.stringify({message:'Unggah foto '+name,content:await blobB64(blob),branch:cfg().b})});
-  return '/images/'+folder+'/'+name;
-}
-
 /* ---------- Form builder ---------- */
 /* field: {k,l,t:text|area|num|sel|chk|color|img|date|strs|list, o:[...], f:[...], folder, h, req} */
 function fld(f,v,path){
@@ -196,7 +194,8 @@ function fld(f,v,path){
   if(f.t==='num')return '<label class="f"><span>'+esc(f.l)+'</span><input type="number" data-p="'+path.join('.')+'" data-t="num" value="'+esc(v)+'">'+hint+'</label>';
   if(f.t==='color')return '<label class="f"><span>'+esc(f.l)+'</span><input type="color" data-p="'+path.join('.')+'" data-t="text" value="'+esc(v||'#2563eb')+'" style="width:70px;height:40px;padding:2px">'+hint+'</label>';
   if(f.t==='date')return '<label class="f"><span>'+esc(f.l)+'</span><input type="date" data-p="'+path.join('.')+'" data-t="text" value="'+esc(v)+'">'+hint+'</label>';
-  if(f.t==='img')return '<div class="f label f"><span style="display:block;font-weight:600;font-size:13px;margin-bottom:5px">'+esc(f.l)+(f.req?' *':'')+'</span><div class="imgbox" data-img="'+path.join('.')+'" data-folder="'+esc(f.folder||'umum')+'">'+(v?'<img src="'+esc(img(v))+'" alt="">':'')+'<div><input type="hidden" data-p="'+path.join('.')+'" data-t="text" value="'+esc(v)+'"><button type="button" class="btn s" data-up="1">'+(v?'Ganti foto':'Pilih foto')+'</button> '+(v?'<button type="button" class="btn s d" data-rm="1">Hapus</button>':'')+'<small style="display:block;color:var(--mut);margin-top:4px">'+esc(f.h||'JPG/PNG, otomatis dikecilkan')+'</small></div></div></div><div style="height:6px"></div>';
+  if(f.t==='img'){var sz=f.size?IMG[f.size]:null;
+    return '<div class="f"><span style="display:block;font-weight:600;font-size:13px;margin-bottom:5px">'+esc(f.l)+(f.req?' *':'')+'</span><div class="imgbox" data-img="'+path.join('.')+'" data-folder="'+esc(f.folder||'umum')+'" data-sz="'+esc(f.size||'')+'">'+(v?'<img src="'+esc(img(v))+'" alt="">':'')+'<div><input type="hidden" data-p="'+path.join('.')+'" data-t="text" value="'+esc(v)+'"><button type="button" class="btn s" data-up="1">'+(v?'Ganti foto':'Pilih foto')+'</button> '+(v?'<button type="button" class="btn s d" data-rm="1">Hapus</button>':'')+'<div class="szb">📐 '+esc(sz?sz.txt+' JPG, ±'+sz.kb+' KB. Rasio lain dipotong otomatis di tengah.':'Maks. 1600 px, otomatis dikecilkan.')+'</div></div></div></div>';}
   if(f.t==='strs'){
     var arr=Array.isArray(v)?v:[];
     return '<div class="f"><span style="display:block;font-weight:600;font-size:13px;margin-bottom:5px">'+esc(f.l)+'</span><div data-strs="'+path.join('.')+'">'+arr.map(function(s,i){return '<div class="row" style="margin-bottom:6px;flex-wrap:nowrap"><input type="text" data-sp="'+i+'" value="'+esc(s)+'"><button type="button" class="btn s d" data-del="'+i+'">✕</button></div>'}).join('')+'</div><button type="button" class="btn s" data-addstr="'+path.join('.')+'">+ Tambah baris</button>'+hint+'</div>';
@@ -234,7 +233,7 @@ function bindForm(root,getObj,rerender,fields){
     else if(el.dataset.dellist){var pr=el.dataset.dellist.split(':'),o4=cur(),p4=parsePath(pr[0]),a4=getP(o4,p4)||[];a4.splice(+pr[1],1);setP(o4,p4,a4);rerender(o4)}
     else if(el.dataset.up){var bx=el.closest('[data-img]');var inp=document.createElement('input');inp.type='file';inp.accept='image/*';
       inp.onchange=async function(){if(!inp.files[0])return;el.disabled=true;el.textContent='Mengunggah...';
-        try{var u=await uploadImage(inp.files[0],bx.dataset.folder);bx.querySelector('[data-p]').value=u;var o5=cur();rerender(o5)}catch(er){toast(er.message,1);el.disabled=false;el.textContent='Pilih foto'}};inp.click()}
+        try{var u=await uploadImage(inp.files[0],bx.dataset.folder,bx.dataset.sz?IMG[bx.dataset.sz]:null);bx.querySelector('[data-p]').value=u.url;if(u.warn.length)toast('Foto diunggah ('+u.info+'). '+u.warn.join(' '));var o5=cur();rerender(o5)}catch(er){toast(er.message,1);el.disabled=false;el.textContent='Pilih foto'}};inp.click()}
     else if(el.dataset.rm){var bx2=el.closest('[data-img]');bx2.querySelector('[data-p]').value='';rerender(cur())}
   };
 }
@@ -257,7 +256,7 @@ var S={
     {k:'deskripsi',l:'Deskripsi',t:'area',rows:5},
     {k:'keunggulan',l:'Keunggulan',t:'strs'},
     {k:'spesifikasi',l:'Spesifikasi',t:'list',add:'Tambah baris spesifikasi',f:[{k:'label',l:'Nama (contoh: Baterai)'},{k:'nilai',l:'Isi'}]},
-    {k:'foto',l:'Foto utama',t:'img',folder:'model'},
+    {k:'foto',l:'Foto utama',t:'img',folder:'model',size:'model'},
     {k:'warna',l:'Warna aksen',t:'color'},
     {k:'link3d',l:'Link tampilan 3D (opsional)'}
   ],
@@ -266,7 +265,7 @@ var S={
     {k:'deskripsi',l:'Isi promo',t:'area',rows:4},
     {k:'periode',l:'Periode berlaku',h:'Contoh: Berlaku sampai 31 Oktober 2026'},
     {k:'model',l:'Model terkait',t:'sel',o:'MODELS'},
-    {k:'foto',l:'Gambar promo',t:'img',folder:'promo'},
+    {k:'foto',l:'Gambar promo',t:'img',folder:'promo',size:'promo'},
     {k:'aktif',l:'Tampilkan di website',t:'chk',def:true}
   ],
   slider:[
@@ -277,7 +276,9 @@ var S={
     {k:'link',l:'Tujuan tombol utama',h:'Tulis wa untuk membuka WhatsApp, atau alamat seperti /promo/'},
     {k:'tombol2',l:'Tombol kedua (teks, boleh kosong)'},
     {k:'link2',l:'Tujuan tombol kedua'},
-    {k:'foto',l:'Foto latar',t:'img',folder:'slider'},
+    {k:'foto',l:'Foto latar (desktop)',t:'img',folder:'slider',size:'slider'},
+    {k:'fotoHp',l:'Foto latar versi HP (opsional)',t:'img',folder:'slider',size:'sliderHp'},
+    {k:'posisiTeks',l:'Posisi teks',t:'sel',o:[{v:'',l:'Kiri'},{v:'kanan',l:'Kanan'}]},
     {k:'warna',l:'Warna aksen',t:'color'},
     {k:'aktif',l:'Tampilkan di website',t:'chk',def:true}
   ],
@@ -287,12 +288,12 @@ var S={
     {k:'model',l:'Model mobil',t:'sel',o:'MODELS'},
     {k:'teks',l:'Isi testimoni (kata asli pelanggan)',t:'area',rows:5,req:1},
     {k:'rating',l:'Bintang',t:'sel',o:['5','4','3','2','1']},
-    {k:'foto',l:'Foto pelanggan (boleh kosong)',t:'img',folder:'testimoni'},
+    {k:'foto',l:'Foto pelanggan (boleh kosong)',t:'img',folder:'testimoni',size:'testimoni'},
     {k:'aktif',l:'Tampilkan di website',t:'chk',def:true}
   ],
   delivery:[
     {k:'judul',l:'Judul foto',req:1,h:'Contoh: Serah terima Geely EX5'},
-    {k:'foto',l:'Foto serah terima',t:'img',folder:'delivery',req:1,h:'Landscape 4:3 paling pas'},
+    {k:'foto',l:'Foto serah terima',t:'img',folder:'delivery',req:1,size:'delivery'},
     {k:'nama',l:'Nama pelanggan (minta izin dulu)'},
     {k:'model',l:'Model mobil',t:'sel',o:'MODELS'},
     {k:'tanggal',l:'Tanggal serah terima',t:'date'},
@@ -306,7 +307,7 @@ var S={
     {k:'whatsapp',l:'Nomor WhatsApp',h:'Format 628xxxxxxxxxx tanpa + dan spasi'},
     {k:'pesanWa',l:'Pesan awal WhatsApp',t:'area',rows:3},
     {k:'email',l:'Email'},
-    {k:'ogImage',l:'Gambar saat link dibagikan',t:'img',folder:'umum',h:'1200 x 630 px'},
+    {k:'ogImage',l:'Gambar saat link dibagikan',t:'img',folder:'umum',size:'og'},
     {k:'sosmed',l:'Media sosial',t:'list',add:'Tambah akun',f:[{k:'platform',l:'Platform',t:'sel',o:['Instagram','Threads','YouTube','TikTok','Facebook','WhatsApp','X','Telegram','Lainnya']},{k:'label',l:'Nama akun'},{k:'url',l:'Link akun'}]},
     {k:'lokasi',l:'Lokasi dealer',t:'list',add:'Tambah lokasi',f:[{k:'nama',l:'Nama lokasi'},{k:'area',l:'Wilayah'},{k:'alamat',l:'Alamat lengkap',t:'area',rows:2},{k:'maps',l:'Kata kunci Google Maps'},{k:'jam',l:'Jam buka'}]}
   ]
@@ -480,6 +481,315 @@ function vZip(){
   };
 }
 
+/* ================= GAMBAR: standar ukuran ================= */
+var IMG={
+  artikel:{w:1200,h:750,txt:'Sampul artikel: 1200 x 750 px (16:10). Tampil utuh di kartu dan aman saat dibagikan ke WhatsApp/Facebook.',kb:250},
+  inline:{w:1200,h:675,txt:'Gambar di dalam artikel: 1200 x 675 px (16:9).',kb:200},
+  model:{w:1600,h:1000,txt:'Foto model: 1600 x 1000 px (16:10), mobil di tengah dengan ruang kosong di sisi.',kb:350},
+  promo:{w:1200,h:750,txt:'Gambar promo: 1200 x 750 px (16:10).',kb:250},
+  slider:{w:1920,h:1080,txt:'Banner beranda desktop: 1920 x 1080 px (16:9). Teks dan mobil jangan terlalu di tepi.',kb:400},
+  sliderHp:{w:1080,h:1440,txt:'Banner HP: 1080 x 1440 px (3:4).',kb:300},
+  testimoni:{w:800,h:600,txt:'Foto testimoni: 800 x 600 px (4:3).',kb:150},
+  delivery:{w:1200,h:900,txt:'Foto serah terima: 1200 x 900 px (4:3), pelanggan dan mobil di tengah.',kb:250},
+  og:{w:1200,h:630,txt:'Gambar bagikan link: 1200 x 630 px (1,91:1).',kb:200},
+  popup:{w:1280,h:720,txt:'Gambar popup: 1280 x 720 px (16:9).',kb:200}
+};
+async function uploadImage(file,folder,size){
+  var url=URL.createObjectURL(file),im=new Image();
+  await new Promise(function(r,j){im.onload=r;im.onerror=function(){j(new Error('File bukan gambar yang valid'))};im.src=url});
+  var sw=im.naturalWidth,sh=im.naturalHeight,warn=[],cw,ch,sx=0,sy=0,sW=sw,sH=sh;
+  if(size){
+    var tr=size.w/size.h,r=sw/sh;
+    if(sw<size.w*0.9||sh<size.h*0.9)warn.push('Foto asli '+sw+'x'+sh+' lebih kecil dari ukuran ideal '+size.w+'x'+size.h+', hasil bisa kurang tajam.');
+    if(Math.abs(r-tr)/tr>0.04){warn.push('Rasio foto disesuaikan otomatis (dipotong di bagian tengah) menjadi '+size.w+'x'+size.h+'.');
+      if(r>tr){sW=Math.round(sh*tr);sx=Math.round((sw-sW)/2)}else{sH=Math.round(sw/tr);sy=Math.round((sh-sH)/2)}}
+    var k=Math.min(1,size.w/sW);cw=Math.round(sW*k);ch=Math.round(sH*k);
+  }else{var kk=Math.min(1,1600/Math.max(sw,sh));cw=Math.round(sw*kk);ch=Math.round(sh*kk)}
+  var cv=document.createElement('canvas');cv.width=cw;cv.height=ch;
+  cv.getContext('2d').drawImage(im,sx,sy,sW,sH,0,0,cw,ch);URL.revokeObjectURL(url);
+  var blob=await new Promise(function(r){cv.toBlob(r,'image/jpeg',.84)});
+  if(!blob)throw new Error('Gagal memproses gambar');
+  if(size&&size.kb&&blob.size>size.kb*1024*1.6)warn.push('Ukuran file '+Math.round(blob.size/1024)+' KB, lebih besar dari ideal ±'+size.kb+' KB (bisa memperlambat halaman).');
+  var name=(slugify(file.name.replace(/\.[^.]+$/,''))||'foto')+'-'+Date.now().toString(36)+'.jpg';
+  await gh('contents/public/images/'+folder+'/'+name,{method:'PUT',body:JSON.stringify({message:'Unggah foto '+name,content:await blobB64(blob),branch:cfg().b})});
+  return {url:'/images/'+folder+'/'+name,info:cw+' x '+ch+' px, '+Math.round(blob.size/1024)+' KB',warn:warn};
+}
+
+/* ================= ARTIKEL ================= */
+var ARTS=null,LPS=[];
+async function loadArts(force){
+  if(ARTS&&!force)return ARTS;
+  var r=await fetch('./artikel.json?'+Date.now());if(!r.ok)throw new Error('Daftar artikel belum tersedia. Tunggu build selesai lalu muat ulang.');
+  var j=await r.json();ARTS=j.artikel;LPS=j.lp;return ARTS;
+}
+function todayWIB(){return new Date(Date.now()+7*3600*1000).toISOString().slice(0,10)}
+function artStatus(a){return a.draft?'draft':(a.date>todayWIB()?'terjadwal':'terbit')}
+function seoAnalyze(a,others){
+  var title=(a.title||'').trim(),desc=(a.description||'').trim(),body=a.body||'';
+  var tags=(a.tags||[]).map(function(t){return String(t).trim()}).filter(Boolean);
+  var kw=(tags[0]||'').toLowerCase();
+  var plain=body.replace(/<[^>]+>/g,' ').replace(/`[^`]*`/g,' ').replace(/!\[[^\]]*\]\([^)]*\)/g,' ').replace(/\[([^\]]*)\]\([^)]*\)/g,'$1').replace(/^\s*(#+|[-*>|])\s?/gm,' ');
+  var wordsArr=plain.match(/\S+/g)||[],words=wordsArr.length;
+  var paras=body.trim().split(/\n\s*\n/),first=(paras[0]||'').replace(/\[([^\]]*)\]\([^)]*\)/g,'$1');
+  var firstOk=!/^\s*(#|[-*|<])/.test(first),fw=firstOk?(first.match(/\S+/g)||[]).length:0;
+  var first100=wordsArr.slice(0,100).join(' ').toLowerCase();
+  var sents=plain.split(/(?<=[.!?])\s+/).filter(function(x){return x.trim().split(/\s+/).length>=3});
+  var longS=sents.filter(function(x){return x.trim().split(/\s+/).length>30}).length;
+  var links=[];body.replace(/\]\((\/[^)]*)\)/g,function(m,u){links.push(u);return m});
+  var artLinks=links.filter(function(l,i){return l.indexOf('/artikel/')===0&&links.indexOf(l)===i}).length;
+  var h2=(body.match(/^## /gm)||[]).length;
+  var imgs=[];body.replace(/!\[([^\]]*)\]\(([^)]*)\)/g,function(m,alt){imgs.push(alt.trim());return m});
+  var kwWords=kw.split(/\s+/).filter(function(w){return w.length>2}),slug=a.slug||'';
+  var kwCount=kw?(plain.toLowerCase().split(kw).length-1):0,dens=words?kwCount*kw.split(/\s+/).length/words*100:0;
+  var items=[];function add(w,ok,label,tip){items.push({w:w,ok:ok,label:label,tip:tip})}
+  add(8,title.length>=45&&title.length<=65,'Judul 45-65 karakter (sekarang '+title.length+')','Judul terlalu '+(title.length<45?'pendek':'panjang')+'. Ideal 50-60 karakter supaya utuh di hasil Google.');
+  add(8,!!kw&&title.toLowerCase().indexOf(kw)>=0,'Keyword utama ada di judul'+(kw?' ("'+kw+'")':''),kw?'Taruh "'+kw+'" di judul, sebaiknya di awal.':'Isi Tag. Tag pertama = keyword utama, contoh: geely ex2 max.');
+  add(4,!!kw&&desc.toLowerCase().indexOf(kw)>=0,'Keyword utama ada di deskripsi','Masukkan keyword utama ke deskripsi.');
+  add(8,desc.length>=120&&desc.length<=160,'Deskripsi 120-160 karakter (sekarang '+desc.length+')','Deskripsi '+(desc.length<120?'terlalu pendek':'terlalu panjang')+'. Tulis 140-160 karakter dan ajak orang mengklik.');
+  add(8,firstOk&&fw>=40&&fw<=70,'Paragraf pembuka 40-70 kata sebagai ringkasan jawaban (sekarang '+fw+')','Paragraf pertama dibuat ringkasan jawaban 40-70 kata (disukai Google dan pencarian AI), jangan diawali subjudul.');
+  add(8,!!kw&&first100.indexOf(kw)>=0,'Keyword utama muncul di 100 kata pertama','Sebut keyword utama di kalimat pertama.');
+  add(10,words>=900,'Panjang minimal 900 kata (sekarang '+words+')','Tambahkan isi bermanfaat sampai minimal 900 kata (ideal 1.000-1.500).');
+  add(6,h2>=5,'Minimal 5 subjudul ## (sekarang '+h2+')','Pecah isi dengan subjudul ## agar mudah dipindai.');
+  add(6,/^## Pertanyaan yang sering diajukan/m.test(body),'Ada bagian FAQ','Tambah "## Pertanyaan yang sering diajukan", tiap pertanyaan ### lalu jawaban singkat. Bisa tampil sebagai rich result.');
+  add(4,/^## Kesimpulan/m.test(body),'Ada bagian "## Kesimpulan"','Tutup dengan ## Kesimpulan dan ajakan menghubungi tim.');
+  add(8,artLinks>=3,'Minimal 3 tautan ke artikel lain (sekarang '+artLinks+')','Tautkan artikel terkait: [teks](/artikel/alamat/). Gunakan tombol "Sisipkan tautan".');
+  add(4,links.some(function(l){return l.indexOf('/model/')===0}),'Ada tautan ke halaman model','Contoh: [Geely EX2](/model/geely-ex2/).');
+  add(4,links.some(function(l){return l==='/promo/'||l==='/kontak/'}),'Ada tautan ke Promo atau Kontak','Tambah ajakan: [hubungi tim](/kontak/).');
+  var broken=links.filter(function(l){var m=l.match(/^\/(artikel|lp|model)\/([^/]+)\/?/);if(!m)return false;
+    if(m[1]==='artikel')return !(ARTS||[]).some(function(x){return x.slug===m[2]});
+    if(m[1]==='lp')return !LPS.some(function(x){return x.slug===m[2]});
+    return !MODELS_SEL.some(function(x){return x.slug===m[2]})});
+  add(6,broken.length===0,broken.length?'Ada tautan internal rusak: '+broken.slice(0,2).join(', '):'Semua tautan internal valid','Perbaiki alamat tautan yang tidak ada: '+broken.join(', '));
+  add(6,!!(a.image||'').trim(),'Gambar sampul diisi','Unggah sampul 1200 x 750. Kalau kosong, website membuat sampul otomatis (sah, tapi foto asli lebih menarik).');
+  add(4,imgs.every(function(x){return x.length>=8}),imgs.length?'Semua gambar punya keterangan (alt) deskriptif':'Gambar sisipan: tidak ada','Beri alt deskriptif: ![Geely EX2 Max warna abu metalik](/images/...).');
+  add(4,tags.length>=5&&tags.length<=10&&tags.every(function(t){return t===t.toLowerCase()}),'Tag 5-10 buah, huruf kecil (sekarang '+tags.length+')','Isi 5-10 tag huruf kecil relevan.');
+  add(4,!!slug&&slug.length<=70&&(!kwWords.length||kwWords.some(function(w){return slug.indexOf(w)>=0})),'Alamat (slug) pendek dan memuat keyword','Slug maksimal 60-70 karakter dan memuat kata keyword.');
+  add(3,!kw||(dens>=0.4&&dens<=2.5),'Kepadatan keyword wajar ('+dens.toFixed(1)+'%)',dens<0.4?'Keyword utama terlalu jarang. Sebut lebih alami di isi.':'Keyword terlalu sering diulang. Variasikan kata.');
+  add(3,longS<=Math.max(3,sents.length*0.12),'Kalimat mudah dibaca ('+longS+' kalimat terlalu panjang)','Pecah kalimat lebih dari 30 kata menjadi dua.');
+  var dup=kw&&(others||[]).some(function(o){return o.slug!==slug&&(o.tags||[])[0]&&String(o.tags[0]).toLowerCase()===kw});
+  add(4,!dup,dup?'Keyword utama sama dengan artikel lain (kanibalisasi)':'Keyword utama unik','Satu keyword utama sebaiknya satu halaman. Ganti tag pertama dengan sudut lain.');
+  add(2,!/^# /m.test(body),'Tidak ada judul H1 (#) di isi','Hapus baris yang diawali satu #. Judul sudah otomatis jadi H1.');
+  var tot=0,got=0;items.forEach(function(i){tot+=i.w;if(i.ok)got+=i.w});
+  var score=Math.round(got/tot*100);
+  return {score:score,items:items,words:words,level:score>=85?'bagus':(score>=60?'cukup':'kurang')};
+}
+function seoBox(r){
+  var c=r.level==='bagus'?'ok':r.level==='cukup'?'warn':'hot';
+  return '<div class="seohead"><span class="tag '+c+'" style="font-size:20px;padding:4px 14px">'+r.score+'/100</span> <span>'+(r.level==='bagus'?'Sangat baik, siap terbit.':r.level==='cukup'?'Cukup. Perbaiki poin merah agar lebih mudah naik di Google.':'Masih kurang. Perbaiki poin merah di bawah.')+' ('+r.words+' kata)</span></div>'+
+  r.items.slice().sort(function(a,b){return (a.ok?1:0)-(b.ok?1:0)}).map(function(i){return '<div class="seoi '+(i.ok?'ok':'no')+'"><b>'+(i.ok?'✔ ':'✖ ')+esc(i.label)+'</b>'+(i.ok?'':'<small>'+esc(i.tip)+'</small>')+'</div>'}).join('');
+}
+function parseMd(t){
+  var m=t.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/),fm={};
+  if(!m)return {fm:fm,body:t};
+  m[1].split(/\r?\n/).forEach(function(l){var k=l.match(/^(\w+):\s*(.*)$/);if(!k)return;var v=k[2].trim();
+    try{if(/^["\[]/.test(v))v=JSON.parse(v);else if(v==='true')v=true;else if(v==='false')v=false}catch(e){}fm[k[1]]=v});
+  return {fm:fm,body:m[2].replace(/^\n+/,'')};
+}
+function toMd(a){
+  var fm=['---','title: '+JSON.stringify(a.title),'description: '+JSON.stringify(a.description),'date: '+a.date,'category: '+JSON.stringify(a.category||'Info Geely'),'tags: '+JSON.stringify(a.tags||[])];
+  if(a.image)fm.push('image: '+JSON.stringify(a.image));
+  fm.push('draft: '+(a.draft?'true':'false'),'---','');
+  return fm.join('\n')+'\n'+a.body.replace(/^\n+/,'').replace(/\s+$/,'')+'\n';
+}
+var BADGE={draft:'<span class="tag off">Draft</span>',terjadwal:'<span class="tag warn">Terjadwal</span>',terbit:'<span class="tag ok">Terbit</span>'};
+async function vArtikel(){
+  main.innerHTML=head('Artikel','Memuat...')+'<div class="card">Memuat...</div>';bindMenu();
+  try{await load('models',[]).then(function(m){MODELS_SEL=m.val});await loadArts()}catch(e){main.innerHTML=head('Artikel','')+'<div class="note">'+esc(e.message)+'</div>';bindMenu();return}
+  var filt='semua',q='';
+  function list(){
+    var rows=ARTS.map(function(a){return {a:a,s:artStatus(a),r:seoAnalyze(a,ARTS)}}).filter(function(x){return (filt==='semua'||x.s===filt)&&(!q||(x.a.title+x.a.slug).toLowerCase().indexOf(q)>=0)}).sort(function(x,y){return y.a.date.localeCompare(x.a.date)});
+    var avg=ARTS.length?Math.round(ARTS.reduce(function(s,a){return s+seoAnalyze(a,ARTS).score},0)/ARTS.length):0;
+    main.innerHTML=head('Artikel',ARTS.length+' artikel · rata-rata skor SEO '+avg+'/100','<button class="btn p" id="add">+ Artikel baru</button>')+
+    '<div class="row" style="margin-bottom:12px"><input type="text" id="q" placeholder="Cari judul..." value="'+esc(q)+'" style="max-width:260px">'+['semua','terbit','terjadwal','draft'].map(function(s){return '<button class="btn s'+(filt===s?' p':'')+'" data-f="'+s+'">'+s+'</button>'}).join('')+'</div>'+
+    '<div class="card" style="overflow:auto;padding:6px 12px"><table><thead><tr><th>Judul</th><th>Status</th><th>Tanggal</th><th>SEO</th><th></th></tr></thead><tbody>'+rows.slice(0,150).map(function(x){var c=x.r.level==='bagus'?'ok':x.r.level==='cukup'?'warn':'hot';
+      return '<tr><td><b>'+esc(x.a.title)+'</b><br><span style="color:var(--mut);font-size:12px">'+esc(x.a.category)+' · /artikel/'+esc(x.a.slug)+'/</span></td><td>'+BADGE[x.s]+'</td><td>'+esc(x.a.date)+'</td><td><span class="tag '+c+'">'+x.r.score+'</span></td><td style="white-space:nowrap"><button class="btn s" data-e="'+esc(x.a.slug)+'">Ubah</button> <button class="btn s d" data-d="'+esc(x.a.slug)+'">✕</button></td></tr>'}).join('')+'</tbody></table></div>';
+    bindMenu();
+    $('add').onclick=function(){edit(null)};
+    $('q').oninput=function(){q=this.value.toLowerCase();var p=this.selectionStart;list();var n=$('q');n.focus();n.setSelectionRange(p,p)};
+    main.querySelectorAll('[data-f]').forEach(function(b){b.onclick=function(){filt=b.dataset.f;list()}});
+    main.querySelectorAll('[data-e]').forEach(function(b){b.onclick=function(){edit(b.dataset.e)}});
+    main.querySelectorAll('[data-d]').forEach(function(b){b.onclick=async function(){
+      if(!confirm('Hapus artikel ini permanen?'))return;
+      try{var f=await gh('contents/src/content/artikel/'+b.dataset.d+'.md?ref='+encodeURIComponent(cfg().b));
+        await gh('contents/src/content/artikel/'+b.dataset.d+'.md',{method:'DELETE',body:JSON.stringify({message:'Hapus artikel '+b.dataset.d,sha:f.sha,branch:cfg().b})});
+        ARTS=ARTS.filter(function(a){return a.slug!==b.dataset.d});toast('Terhapus');list()}catch(e){toast(e.message,1)}}});
+  }
+  function edit(slug){
+    var isNew=!slug,a=isNew?{slug:'',title:'',description:'',date:todayWIB(),category:'Model Geely',tags:[],image:'',draft:true,body:'Tulis paragraf pembuka 40-70 kata di sini yang memuat keyword utama dan langsung menjawab pertanyaan pembaca.\n\n## Subjudul pertama\n\nIsi...\n\n## Pertanyaan yang sering diajukan\n\n### Pertanyaan pertama?\n\nJawaban singkat.\n\n## Kesimpulan\n\nRingkasan dan ajakan menghubungi tim lewat halaman [kontak](/kontak/).\n'}:JSON.parse(JSON.stringify(ARTS.filter(function(x){return x.slug===slug})[0]));
+    var st=isNew?'draft':artStatus(a),cats=[];ARTS.forEach(function(x){if(x.category&&cats.indexOf(x.category)<0)cats.push(x.category)});
+    main.innerHTML=head(isNew?'Artikel baru':'Ubah artikel','','<button class="btn" id="bk">Kembali</button><button class="btn p" id="sv">Simpan</button>')+
+    '<div class="two" style="grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:16px;align-items:start" id="ed2"><div class="card">'+
+    '<label class="f"><span>Judul * <em id="c1" style="font-weight:400;color:var(--mut)"></em></span><input type="text" id="a_t" value="'+esc(a.title)+'"></label>'+
+    '<label class="f"><span>Alamat artikel (slug)</span><input type="text" id="a_s" value="'+esc(a.slug)+'"'+(isNew?'':' disabled')+'><small>'+(isNew?'Otomatis dari judul, boleh diubah. Pendek dan memuat keyword.':'Tidak bisa diubah setelah dibuat.')+'</small></label>'+
+    '<label class="f"><span>Deskripsi untuk Google * <em id="c2" style="font-weight:400;color:var(--mut)"></em></span><textarea id="a_d" rows="3">'+esc(a.description)+'</textarea></label>'+
+    '<div class="two"><label class="f"><span>Kategori</span><input type="text" id="a_c" list="cats" value="'+esc(a.category)+'"><datalist id="cats">'+cats.map(function(c){return '<option value="'+esc(c)+'">'}).join('')+'</datalist></label>'+
+    '<label class="f"><span>Tag (pisahkan koma, tag pertama = keyword utama)</span><input type="text" id="a_g" value="'+esc((a.tags||[]).join(', '))+'"></label></div>'+
+    '<div class="f"><span style="display:block;font-weight:600;font-size:13px;margin-bottom:5px">Gambar sampul</span><div class="imgbox" id="cov">'+(a.image?'<img src="'+esc(img(a.image))+'" alt="">':'')+'<div><button type="button" class="btn s" id="covb">'+(a.image?'Ganti':'Pilih')+' gambar</button> '+(a.image?'<button type="button" class="btn s d" id="covx">Hapus</button>':'')+'<div class="szb">📐 '+IMG.artikel.txt+' JPG, ±'+IMG.artikel.kb+' KB. Rasio lain dipotong otomatis di tengah.</div><div id="covi" style="font-size:12px;margin-top:4px"></div></div></div></div>'+
+    '<div class="two" style="margin-top:10px"><label class="f"><span>Status penayangan</span><select id="a_st"><option value="draft">Draft (belum tayang)</option><option value="terbit">Terbitkan sekarang</option><option value="terjadwal">Jadwalkan tayang</option></select></label>'+
+    '<label class="f" id="dtw"><span>Tanggal tayang</span><input type="date" id="a_dt" value="'+esc(a.date)+'"><small id="dts"></small></label></div>'+
+    '<div class="f"><span style="display:block;font-weight:600;font-size:13px;margin-bottom:5px">Isi artikel (Markdown)</span><div class="row" style="margin-bottom:6px"><button type="button" class="btn s" data-tb="h2">H2</button><button type="button" class="btn s" data-tb="h3">H3</button><button type="button" class="btn s" data-tb="b"><b>B</b></button><button type="button" class="btn s" data-tb="ul">• Daftar</button><button type="button" class="btn s" data-tb="faq">+ FAQ</button><button type="button" class="btn s" data-tb="link">🔗 Sisipkan tautan</button><button type="button" class="btn s" data-tb="img">🖼 Sisipkan gambar</button></div>'+
+    '<textarea id="a_b" rows="26" style="font-family:ui-monospace,Menlo,monospace;font-size:13.5px">'+esc(a.body)+'</textarea><div class="szb">📐 Gambar di dalam artikel: '+IMG.inline.txt+' ±'+IMG.inline.kb+' KB. Selalu isi keterangan (alt) deskriptif.</div></div></div>'+
+    '<div class="card" style="position:sticky;top:12px;max-height:calc(100vh - 30px);overflow:auto"><b>Analisis SEO langsung</b><div id="seo" style="margin-top:8px"></div></div></div>';
+    bindMenu();$('a_st').value=st;
+    var cur=a;
+    function vals(){return {slug:$('a_s').value.trim(),title:$('a_t').value.trim(),description:$('a_d').value.trim(),category:$('a_c').value.trim(),tags:$('a_g').value.split(',').map(function(t){return t.trim().toLowerCase()}).filter(Boolean),image:cur.image,body:$('a_b').value}}
+    var tm;function upd(){if(!$('c1'))return;var v=vals();$('c1').textContent=v.title.length+'/65';$('c2').textContent=v.description.length+'/160';
+      $('dtw').style.display=$('a_st').value==='terjadwal'?'':'none';
+      var dd=$('a_dt').value;$('dts').textContent=$('a_st').value==='terjadwal'?(dd>todayWIB()?'Tayang otomatis pada '+dd+' (website dibangun ulang tiap hari pukul 05.30 WIB).':'Pilih tanggal setelah hari ini.'):'';
+      clearTimeout(tm);tm=setTimeout(function(){var sb=$('seo');if(sb)sb.innerHTML=seoBox(seoAnalyze(v,ARTS))},250)}
+    ['a_t','a_d','a_g','a_b','a_st','a_dt'].forEach(function(i){$(i).oninput=upd;$(i).onchange=upd});
+    if(isNew)$('a_t').addEventListener('input',function(){if(!this.dataset.m)$('a_s').value=slugify(this.value).slice(0,70)});
+    $('a_s').oninput=function(){$('a_t').dataset.m=1;upd()};
+    upd();$('bk').onclick=list;
+    $('covb').onclick=function(){var inp=document.createElement('input');inp.type='file';inp.accept='image/*';inp.onchange=async function(){if(!inp.files[0])return;$('covb').disabled=true;$('covb').textContent='Mengunggah...';
+      try{var u=await uploadImage(inp.files[0],'artikel',IMG.artikel);cur.image=u.url;$('cov').querySelector('img')?$('cov').querySelector('img').src=img(u.url):$('cov').insertAdjacentHTML('afterbegin','<img src="'+esc(img(u.url))+'" alt="">');$('covi').innerHTML='✔ '+u.info+(u.warn.length?'<br>⚠ '+u.warn.map(esc).join('<br>⚠ '):'');upd()}catch(e){toast(e.message,1)}$('covb').disabled=false;$('covb').textContent='Ganti gambar'};inp.click()};
+    var cx=$('covx');if(cx)cx.onclick=function(){cur.image='';var i=$('cov').querySelector('img');if(i)i.remove();cx.remove();upd()};
+    var ta=$('a_b');
+    function ins(txt,wrap){var s=ta.selectionStart,e=ta.selectionEnd,sel=ta.value.slice(s,e);var t=wrap?wrap[0]+(sel||wrap[2]||'teks')+wrap[1]:txt;ta.value=ta.value.slice(0,s)+t+ta.value.slice(e);ta.focus();ta.selectionStart=ta.selectionEnd=s+t.length;upd()}
+    main.querySelectorAll('[data-tb]').forEach(function(b){b.onclick=async function(){var k=b.dataset.tb;
+      if(k==='h2')ins('',['\n\n## ','\n\n','Subjudul']);else if(k==='h3')ins('',['\n\n### ','\n\n','Subjudul']);else if(k==='b')ins('',['**','**']);else if(k==='ul')ins('\n\n- item 1\n- item 2\n- item 3\n\n');
+      else if(k==='faq')ins('\n\n### Pertanyaan baru?\n\nJawaban singkat 1-3 kalimat.\n\n');
+      else if(k==='link'){var opts=ARTS.map(function(x){return {u:'/artikel/'+x.slug+'/',t:x.title}}).concat(LPS.map(function(x){return {u:'/lp/'+x.slug+'/',t:'LP: '+x.title}})).concat(MODELS_SEL.map(function(x){return {u:'/model/'+x.slug+'/',t:'Model: '+x.nama}})).concat([{u:'/promo/',t:'Halaman Promo'},{u:'/kontak/',t:'Halaman Kontak'}]);
+        var key=prompt('Cari tujuan tautan (ketik sebagian judul, mis. "ex2 harga"):');if(!key)return;var ks=key.toLowerCase().split(/\s+/);
+        var hit=opts.filter(function(o){return ks.every(function(w){return (o.t+o.u).toLowerCase().indexOf(w)>=0})}).slice(0,8);if(!hit.length){toast('Tidak ada yang cocok',1);return}
+        var n=hit.length===1?0:parseInt(prompt(hit.map(function(h,i){return (i+1)+'. '+h.t}).join('\n')+'\n\nKetik nomor pilihan:'),10)-1;if(!(n>=0&&n<hit.length))return;
+        ins('',['[',']('+hit[n].u+')','teks tautan'])}
+      else if(k==='img'){var inp2=document.createElement('input');inp2.type='file';inp2.accept='image/*';inp2.onchange=async function(){if(!inp2.files[0])return;var alt=prompt('Keterangan gambar (alt), deskriptif min. 8 huruf:','');if(alt===null)return;toast('Mengunggah gambar...');
+        try{var u=await uploadImage(inp2.files[0],'artikel',IMG.inline);ins('\n\n!['+alt+']('+u.url+')\n\n');toast('Gambar disisipkan ('+u.info+')'+(u.warn.length?'. '+u.warn[0]:''))}catch(e){toast(e.message,1)}};inp2.click()}
+    }});
+    $('sv').onclick=async function(){
+      var v=vals(),s=$('a_st').value,d=$('a_dt').value;
+      if(!v.title||!v.description||!v.slug){toast('Judul, deskripsi, dan alamat wajib diisi',1);return}
+      if(v.description.length>200){toast('Deskripsi maksimal 200 karakter',1);return}
+      if(s==='terjadwal'&&!(d>todayWIB())){toast('Tanggal jadwal harus setelah hari ini',1);return}
+      var out={title:v.title,description:v.description,category:v.category||'Info Geely',tags:v.tags,image:v.image,body:v.body,draft:s==='draft',date:s==='terjadwal'?d:(isNew||a.draft||a.date>todayWIB()?todayWIB():a.date)};
+      var r=seoAnalyze(v,ARTS);
+      if(s!=='draft'&&r.score<60&&!confirm('Skor SEO baru '+r.score+'/100. Tetap '+(s==='terbit'?'terbitkan':'jadwalkan')+'?'))return;
+      busy(this);
+      try{var path='src/content/artikel/'+v.slug+'.md',sha;
+        try{sha=(await gh('contents/'+path+'?ref='+encodeURIComponent(cfg().b))).sha}catch(e2){if(e2.status!==404)throw e2}
+        if(isNew&&sha){toast('Alamat artikel sudah dipakai',1);idle(this);return}
+        var body={message:(isNew?'Artikel baru: ':'Ubah artikel: ')+v.title,content:b64(toMd(out)),branch:cfg().b};if(sha)body.sha=sha;
+        await gh('contents/'+path,{method:'PUT',body:JSON.stringify(body)});
+        var rec=Object.assign({slug:v.slug},out);var ix=ARTS.findIndex(function(x){return x.slug===v.slug});if(ix>=0)ARTS[ix]=rec;else ARTS.push(rec);
+        toast(s==='draft'?'Draft tersimpan':s==='terjadwal'?'Terjadwal untuk '+d:'Tersimpan. Website dibangun ulang (±3 menit).');list();
+      }catch(e){toast(e.message,1);idle(this)}
+    };
+  }
+  list();
+}
+
+/* ================= TATA LETAK BERANDA ================= */
+var SEC_LABEL={slider:'Banner utama (slider)',stats:'Strip angka/keunggulan singkat',model:'Pilihan model',promo:'Promo terbaru',delivery:'Foto serah terima',keunggulan:'Kenapa memilih kami',testimoni:'Testimoni pelanggan',artikel:'Artikel terbaru',faq:'FAQ dan ajakan hubungi'};
+async function vLayout(){
+  main.innerHTML=head('Tata Letak Beranda','Atur urutan dan tampilkan/sembunyikan bagian beranda')+'<div class="card">Memuat...</div>';bindMenu();
+  try{
+    var d=await load('layout',{beranda:[]}),ids=Object.keys(SEC_LABEL),arr=(d.val.beranda||[]).filter(function(x){return SEC_LABEL[x.id]});
+    ids.forEach(function(i){if(!arr.some(function(x){return x.id===i}))arr.push({id:i,aktif:true})});
+    function draw(){
+      main.innerHTML=head('Tata Letak Beranda','Atur urutan dan tampilkan/sembunyikan bagian beranda','<button class="btn p" id="sv">Simpan tata letak</button>')+
+      '<div class="note b" style="margin-bottom:14px">Isi teks tiap bagian diubah di menu <b>Teks &amp; Komponen</b>. Bagian yang kosong datanya (mis. testimoni belum ada) otomatis tidak tampil.</div>'+
+      arr.map(function(x,i){return '<div class="item"><div class="ph">'+(i+1)+'</div><div class="t"><b>'+esc(SEC_LABEL[x.id])+'</b></div><label class="chk" style="margin:0"><input type="checkbox" data-a="'+i+'"'+(x.aktif?' checked':'')+'> Tampil</label><div class="row"><button class="btn s" data-m="-1:'+i+'">↑</button><button class="btn s" data-m="1:'+i+'">↓</button></div></div>'}).join('');
+      bindMenu();
+      main.querySelectorAll('[data-a]').forEach(function(c){c.onchange=function(){arr[+c.dataset.a].aktif=c.checked}});
+      main.querySelectorAll('[data-m]').forEach(function(b){b.onclick=function(){var p=b.dataset.m.split(':'),i=+p[1],j=i+ +p[0];if(j<0||j>=arr.length)return;var t=arr[i];arr[i]=arr[j];arr[j]=t;draw()}});
+      $('sv').onclick=async function(){busy(this);try{await save('layout',{beranda:arr},'Ubah tata letak beranda');toast('Tersimpan. Website dibangun ulang.')}catch(e){toast(e.message,1)}idle(this)};
+    }
+    draw();
+  }catch(e){main.innerHTML=head('Tata Letak','')+'<div class="note">'+esc(e.message)+'</div>';bindMenu()}
+}
+
+/* ================= TEKS & KOMPONEN ================= */
+var GRP_LABEL={beranda:'Beranda',halamanModel:'Halaman Model',halamanPromo:'Halaman Promo',halamanArtikel:'Halaman Artikel',halamanTestimoni:'Halaman Testimoni',halamanDelivery:'Halaman Serah Terima',kontak:'Halaman Kontak',footer:'Footer',popup:'Popup Promo'};
+var KEY_LABEL={stats:'Angka sorotan',modelJudul:'Judul bagian model',modelTeks:'Teks bagian model',promoJudul:'Judul bagian promo',promoTeks:'Teks bagian promo',deliveryJudul:'Judul serah terima',deliveryTeks:'Teks serah terima',testimoniJudul:'Judul testimoni',testimoniTeks:'Teks testimoni',keunggulanJudul:'Judul keunggulan',keunggulan:'Daftar keunggulan',artikelJudul:'Judul artikel',artikelTeks:'Teks artikel',faqJudul:'Judul FAQ',faq:'Daftar FAQ',ctaJudul:'Judul ajakan',ctaTeks:'Teks ajakan',ctaTombol:'Tombol ajakan',seoJudul:'Judul untuk Google',seoDeskripsi:'Deskripsi untuk Google (maks 160)',judul:'Judul halaman',teks:'Teks pengantar',kosong:'Tulisan jika data kosong',layananJudul:'Judul layanan',layanan:'Daftar layanan',catatan:'Catatan footer',aktif:'Aktifkan',tundaDetik:'Muncul setelah (detik)',label:'Label',foto:'Gambar',tombol:'Teks tombol',link:'Tujuan tombol',angka:'Angka/judul',tanya:'Pertanyaan',jawab:'Jawaban',ikon:'Ikon (emoji)'};
+function autoFields(def,cur){
+  return Object.keys(def).map(function(k){
+    var v=def[k],l=KEY_LABEL[k]||k,sample=cur&&cur[k]!==undefined?cur[k]:v;
+    if(typeof v==='boolean')return {k:k,l:l,t:'chk'};
+    if(typeof v==='number')return {k:k,l:l,t:'num'};
+    if(Array.isArray(v)){
+      if(v.length&&typeof v[0]==='object')return {k:k,l:l,t:'list',add:'Tambah',f:autoFields(v[0],(Array.isArray(sample)?sample[0]:null))};
+      return {k:k,l:l,t:'strs'};
+    }
+    if(typeof v==='string'){
+      if(k==='foto')return {k:k,l:l,t:'img',folder:'umum',size:'popup'};
+      var long=v.length>80||/\n/.test(v)||/Teks|teks|deskripsi|Deskripsi|jawab/.test(k);
+      return {k:k,l:l,t:long?'area':'text',rows:3};
+    }
+    return {k:k,l:l};
+  });
+}
+async function vTeks(){
+  main.innerHTML=head('Teks & Komponen','Memuat...')+'<div class="card">Memuat...</div>';bindMenu();
+  try{
+    var d=await load('content',{}),def=await (await fetch('./defaults.json')).json(),dc=def.content||{};
+    var data=JSON.parse(JSON.stringify(d.val||{}));Object.keys(dc).forEach(function(g){data[g]=Object.assign({},dc[g],data[g]||{})});
+    var grp=Object.keys(dc)[0],obj=null;
+    function draw(o){
+      if(o)data[grp]=o;
+      var fields=autoFields(dc[grp],data[grp]);
+      main.innerHTML=head('Teks & Komponen','Semua teks di website bisa diubah di sini','<button class="btn p" id="sv">Simpan</button>')+
+      '<div class="row" style="margin-bottom:14px">'+Object.keys(dc).map(function(g){return '<button class="btn s'+(g===grp?' p':'')+'" data-g="'+g+'">'+esc(GRP_LABEL[g]||g)+'</button>'}).join('')+'</div>'+
+      '<div class="card" id="fm">'+formHTML(fields,data[grp])+'</div>';
+      bindMenu();
+      main.querySelectorAll('[data-g]').forEach(function(b){b.onclick=function(){data[grp]=collect($('fm'),JSON.parse(JSON.stringify(data[grp])));grp=b.dataset.g;draw()}});
+      bindForm(main,function(){return data[grp]},function(o){draw(o)},fields);
+      $('sv').onclick=async function(){data[grp]=collect($('fm'),JSON.parse(JSON.stringify(data[grp])));busy(this);try{await save('content',data,'Ubah teks website ('+(GRP_LABEL[grp]||grp)+')');toast('Tersimpan. Website dibangun ulang.')}catch(e){toast(e.message,1)}idle(this)};
+    }
+    draw();
+  }catch(e){main.innerHTML=head('Teks & Komponen','')+'<div class="note">'+esc(e.message)+'</div>';bindMenu()}
+}
+
+/* ================= SEO & RANKING ================= */
+function fmtD(a,b,inv){var d=a-b;if(!b&&!a)return '';var good=inv?d<0:d>0;return '<span style="color:'+(d===0?'var(--mut)':good?'var(--ok)':'var(--bad)')+';font-size:12px">'+(d>0?'▲ ':d<0?'▼ ':'')+Math.abs(+d.toFixed(1))+'</span>'}
+async function vSeo(){
+  main.innerHTML=head('SEO & Ranking','Memuat...')+'<div class="card">Memuat...</div>';bindMenu();
+  try{
+    try{await load('models',[]).then(function(m){MODELS_SEL=m.val});await loadArts()}catch(e){ARTS=ARTS||[]}
+    var lap=(await load('laporan',null)).val,cn='';
+    try{cn=unb64((await gh('contents/public/CNAME?ref='+encodeURIComponent(cfg().b))).content).trim()}catch(e){}
+    var c=cfg(),scores=ARTS.map(function(a){return {a:a,r:seoAnalyze(a,ARTS)}}),avg=scores.length?Math.round(scores.reduce(function(s,x){return s+x.r.score},0)/scores.length):0;
+    var worst=scores.slice().sort(function(x,y){return x.r.score-y.r.score}).slice(0,8);
+    var h='<div class="grid g4" style="margin-bottom:14px"><div class="card stat"><b>'+avg+'</b><span>Rata-rata skor SEO artikel</span></div><div class="card stat"><b>'+scores.filter(function(x){return x.r.score>=85}).length+'/'+scores.length+'</b><span>Artikel skor 85+</span></div><div class="card stat"><b>'+scores.filter(function(x){return artStatus(x.a)==='terbit'}).length+'</b><span>Artikel tayang</span></div><div class="card stat"><b>'+scores.filter(function(x){return artStatus(x.a)==='terjadwal'}).length+'</b><span>Terjadwal</span></div></div>';
+    h+='<div class="card" style="margin-bottom:14px"><b>Artikel yang paling perlu diperbaiki</b><table style="margin-top:6px"><tbody>'+worst.map(function(x){return '<tr><td>'+esc(x.a.title)+'</td><td><span class="tag '+(x.r.level==='bagus'?'ok':x.r.level==='cukup'?'warn':'hot')+'">'+x.r.score+'</span></td></tr>'}).join('')+'</tbody></table><small style="color:var(--mut)">Buka menu Artikel, klik Ubah, lalu ikuti saran di panel analisis.</small></div>';
+    /* domain */
+    h+='<div class="card" style="margin-bottom:14px"><b>1. Domain</b>'+(cn?'<p>✅ Domain terpasang: <b>'+esc(cn)+'</b>. Sitemap otomatis di <code>https://'+esc(cn)+'/sitemap-index.xml</code>.</p>':'<p>Belum ada domain. Website sekarang di <code>'+esc(c.o)+'.github.io/'+esc(c.r)+'/</code>. Saat domain sudah dibeli, isi di bawah dan semua fitur ranking di bawah siap jalan.</p>')+
+    '<div class="row"><input type="text" id="dm" placeholder="contoh: geelymai.co.id" value="'+esc(cn)+'" style="max-width:280px"><button class="btn p" id="dmb">Pasang domain</button></div>'+
+    '<div class="note b" style="margin-top:10px;font-size:13px"><b>Langkah setelah menekan Pasang domain:</b><br>1) Di pengelola domain, buat 4 record A ke 185.199.108.153, 185.199.109.153, 185.199.110.153, 185.199.111.153 (dan CNAME www ke '+esc(c.o)+'.github.io).<br>2) GitHub, Settings, Pages: isi Custom domain dan centang Enforce HTTPS.<br>3) Daftarkan domain di Google Search Console, kirim sitemap-index.xml.</div></div>';
+    /* otomasi */
+    h+='<div class="card" style="margin-bottom:14px"><b>2. Laporan otomatis (ranking, indeks, link rusak, kecepatan)</b><p style="color:var(--mut);margin:4px 0 10px">Dijalankan GitHub tiap Senin 06.00 WIB. Hasilnya tampil di bawah.</p><div class="row"><button class="btn" id="wf">Pasang workflow laporan</button><button class="btn p" id="run">Jalankan laporan sekarang</button></div>'+
+    '<div class="note" style="margin-top:10px;font-size:13px"><b>Agar data Google (klik, tayang, posisi kata kunci) terbaca:</b> buat Service Account di Google Cloud, aktifkan Search Console API, tambahkan emailnya sebagai pengguna di Search Console, lalu simpan kunci JSON-nya di GitHub, Settings, Secrets and variables, Actions, nama <code>GSC_KEY</code>. Tanpa itu, link rusak dan kecepatan tetap dicek.</div></div>';
+    /* laporan */
+    h+='<div class="card"><b>3. Hasil laporan terakhir</b>';
+    if(!lap||!lap.dibuat)h+='<p style="color:var(--mut)">Belum ada laporan. Jalankan laporan setelah domain terpasang.</p>';
+    else{
+      h+='<p style="color:var(--mut)">Dibuat '+esc(new Date(lap.dibuat).toLocaleString('id-ID'))+(lap.domain?' · '+esc(lap.domain):'')+'</p>';
+      var g=lap.gsc||{};
+      if(g.status==='ok'){var s=g.sekarang,b=g.sebelumnya;
+        h+='<div class="grid g4" style="margin:10px 0"><div class="card stat"><b>'+s.klik+'</b><span>Klik 28 hari '+fmtD(s.klik,b.klik)+'</span></div><div class="card stat"><b>'+s.tayang+'</b><span>Tayang '+fmtD(s.tayang,b.tayang)+'</span></div><div class="card stat"><b>'+s.ctr+'%</b><span>CTR '+fmtD(s.ctr,b.ctr)+'</span></div><div class="card stat"><b>'+s.posisi+'</b><span>Posisi rata-rata '+fmtD(s.posisi,b.posisi,1)+'</span></div></div>';
+        var pages={};(g.semua||[]).forEach(function(q){if(q.halaman)pages[q.halaman]=1});
+        h+='<p>Halaman yang sudah muncul di Google: <b>'+Object.keys(pages).length+'</b> dari ±'+(scores.filter(function(x){return artStatus(x.a)==='terbit'}).length+LPS.length+8)+' halaman.</p>';
+        h+='<b>Peringkat kata kunci</b><div style="overflow:auto;max-height:340px"><table><thead><tr><th>Kata kunci</th><th>Posisi</th><th>Tayang</th><th>Klik</th><th>Halaman</th></tr></thead><tbody>'+(g.semua||[]).slice(0,60).map(function(q){return '<tr><td>'+esc(q.query)+'</td><td><span class="tag '+(q.posisi<=3?'ok':q.posisi<=10?'':q.posisi<=20?'warn':'off')+'">'+q.posisi+'</span></td><td>'+q.tayang+'</td><td>'+q.klik+'</td><td style="font-size:12px">'+esc(q.halaman||'')+'</td></tr>'}).join('')+'</tbody></table></div>';
+        if((g.dekat||[]).length)h+='<p style="margin-top:12px"><b>Peluang: hampir halaman 1</b> (posisi 8-20, perbaiki artikelnya dulu)</p>'+g.dekat.map(function(q){return '<div style="font-size:14px">• '+esc(q.query)+' <span class="tag warn">'+q.posisi+'</span></div>'}).join('');
+      }else h+='<div class="note" style="margin:10px 0">Search Console: '+esc(g.pesan||g.status||'belum tersambung')+'</div>';
+      var lk=lap.link||{};
+      if(lk.status==='ok')h+='<p style="margin-top:12px"><b>Link rusak:</b> '+((lk.rusak||[]).length?'<span style="color:var(--bad)">'+lk.rusak.length+' ditemukan</span>':'<span style="color:var(--ok)">tidak ada</span>')+' (dari '+lk.halaman_dicek+' halaman)</p>'+(lk.rusak||[]).slice(0,10).map(function(r){return '<div style="font-size:13px">• '+esc(r.u||JSON.stringify(r))+'</div>'}).join('');
+      else if(lk.pesan)h+='<div class="note" style="margin:10px 0">Cek link/SEO halaman: '+esc(lk.pesan)+'</div>';
+      var lh=(lap.lighthouse||{}).hasil||[];
+      if(lh.length)h+='<p style="margin-top:12px"><b>Kecepatan (Lighthouse)</b></p>'+lh.slice(0,6).map(function(x){return '<div style="font-size:13px">• '+esc(x.url)+' — '+(x.skor?'performa '+x.skor.performa+', SEO '+x.skor.seo:'gagal')+'</div>'}).join('');
+    }
+    h+='</div>';
+    main.innerHTML=head('SEO & Ranking','Skor SEO, domain, dan pemantauan ranking Google')+h;bindMenu();
+    $('dmb').onclick=async function(){var dm=$('dm').value.trim().toLowerCase().replace(/^https?:\/\//,'').replace(/\/.*$/,'');if(!/^[a-z0-9.-]+\.[a-z]{2,}$/.test(dm)){toast('Format domain tidak valid',1);return}
+      if(!confirm('Pasang domain '+dm+'? Pastikan DNS sudah diarahkan, kalau belum website sementara tidak bisa dibuka lewat alamat github.io lama.'))return;
+      busy(this);try{var sha;try{sha=(await gh('contents/public/CNAME?ref='+encodeURIComponent(cfg().b))).sha}catch(e){}
+        var bd={message:'Pasang domain '+dm,content:b64(dm+'\n'),branch:cfg().b};if(sha)bd.sha=sha;await gh('contents/public/CNAME',{method:'PUT',body:JSON.stringify(bd)});toast('Domain disimpan. Website dibangun ulang dengan domain baru.')}catch(e){toast(e.message,1)}idle(this)};
+    $('wf').onclick=async function(){busy(this,'Memasang...');try{var t=await (await fetch('./mingguan.yml.txt')).text(),p='.github/workflows/otomasi-mingguan.yml',sha;try{sha=(await gh('contents/'+p+'?ref='+encodeURIComponent(cfg().b))).sha}catch(e){}
+        var bd={message:'Pasang workflow laporan mingguan',content:b64(t),branch:cfg().b};if(sha)bd.sha=sha;await gh('contents/'+p,{method:'PUT',body:JSON.stringify(bd)});toast('Workflow terpasang')}catch(e){toast(e.message+' (token perlu izin Workflows)',1)}idle(this)};
+    $('run').onclick=async function(){busy(this,'Memulai...');try{await gh('actions/workflows/otomasi-mingguan.yml/dispatches',{method:'POST',body:JSON.stringify({ref:cfg().b})});toast('Laporan berjalan, tunggu 5-15 menit lalu buka menu ini lagi.')}catch(e){toast(e.message+' (pasang workflow dulu)',1)}idle(this)};
+  }catch(e){main.innerHTML=head('SEO & Ranking','')+'<div class="note">'+esc(e.message)+'</div>';bindMenu()}
+}
+
 /* ---------- router ---------- */
 var TITLES={
   models:['Model & Harga','Kelola EX2, EX5, Starray dan model lain'],
@@ -492,7 +802,7 @@ function go(v){
   if(v==='out'){['m_o','m_r','m_b','m_t'].forEach(LS.del);CACHE={};$('app').classList.add('hide');$('login').classList.remove('hide');return}
   VIEW=v;$('side').classList.remove('open');
   document.querySelectorAll('#nav button').forEach(function(b){b.classList.toggle('on',b.dataset.v===v)});
-  if(v==='dash')vDash();else if(v==='settings')vSettings();else if(v==='leads')vLeads();else if(v==='zip')vZip();
+  if(v==='dash')vDash();else if(v==='settings')vSettings();else if(v==='leads')vLeads();else if(v==='artikel')vArtikel();else if(v==='layout')vLayout();else if(v==='teks')vTeks();else if(v==='seo')vSeo();else if(v==='zip')vZip();
   else vColl(v,TITLES[v][0],TITLES[v][1]);
   window.scrollTo(0,0);
 }
