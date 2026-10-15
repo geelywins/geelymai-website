@@ -67,7 +67,7 @@ async function main() {
     if (kirim >= MAKS) break;
     const url = `${SITE}/artikel/${a.slug}/`;
     try {
-      const r = await fetch(url, { headers: { 'user-agent': 'wins-geely-posting' } });
+      const r = await fetch(url, { headers: { 'user-agent': 'geely-mai-posting' } });
       if (r.status !== 200) { console.log(`Belum bisa dibuka (${r.status}): ${url}, dicoba lagi besok.`); continue; }
       const d = bacaLengkap(a.slug);
       const gambar = a.image ? (/^https?:/.test(a.image) ? a.image : SITE + a.image) : `${SITE}/img/artikel/${a.slug}/sampul.png`;

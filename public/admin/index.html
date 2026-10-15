@@ -549,14 +549,14 @@
   // =============== skema ===============
   var SCH = {};
   SCH.settings = function () { return [
-    { key: 'namaSitus', label: 'Nama website (muncul di logo, judul, footer)', req: true, hint: 'Contoh: Wins Geely' },
+    { key: 'namaSitus', label: 'Nama website (muncul di logo, judul, footer)', req: true, hint: 'Contoh: Geely MAI Jakarta' },
     { key: 'namaPanggilan', label: 'Nama panggilan sales', req: true },
     { key: 'namaLengkap', label: 'Nama lengkap', req: true },
     { key: 'profesi', label: 'Profesi / jabatan', req: true },
     { key: 'tagline', label: 'Tagline singkat (dipakai di judul Google)', req: true },
     { key: 'deskripsi', label: 'Deskripsi website untuk Google (maks. 160 karakter)', type: 'textarea', max: 200, req: true },
     { key: 'dealer', label: 'Nama dealer' },
-    { key: 'whatsapp', label: 'Nomor WhatsApp', req: true, hint: 'Boleh ditulis 087710208822, otomatis jadi format 62...' },
+    { key: 'whatsapp', label: 'Nomor WhatsApp', req: true, hint: 'Boleh ditulis 08123456789, otomatis jadi format 62...' },
     { key: 'pesanWa', label: 'Pesan awal WhatsApp (yang terkirim saat orang menekan tombol WA)', type: 'textarea' },
     { key: 'email', label: 'Email (boleh kosong)', lower: true },
     { key: 'fotoProfil', label: 'Foto profil Anda (tampil kecil di bawah slider beranda)', type: 'image', folder: 'umum', size: { w: 400, h: 400, txt: 'persegi, wajah di tengah' } },
@@ -624,7 +624,7 @@
     { key: 'harga', label: 'Harga / keterangan harga', hint: 'Contoh: Mulai Rp 000.000.000 (OTR Jakarta)' },
     { key: 'spesifikasi', label: 'Spesifikasi', type: 'list', addLabel: 'Tambah spesifikasi', blank: { label: '', nilai: '' }, fields: [ { key: 'label', label: 'Nama (contoh: Jarak tempuh)', req: true }, { key: 'nilai', label: 'Isi', req: true } ] },
     { key: 'model3d', label: 'File 3D mobil (.glb) untuk putar 360°', type: 'glb', hint: 'Unggah file .glb dari Geely/pabrikan (maks. 40 MB, ideal di bawah 15 MB supaya cepat dibuka di HP). Kalau terisi, halaman model menampilkan viewer 3D yang bisa diputar. Kosongkan untuk memakai foto biasa.' },
-    { key: 'link3d', label: 'Link 3D resmi Geely (boleh kosong)', lower: true, hint: 'Tempel alamat halaman 3D di situs Geely, contoh https://global.geely.com/digital/3d/en/ex2. Website menampilkan tombol yang membuka halaman itu di tab baru, sehingga geelywins.com tetap terbuka.' },
+    { key: 'link3d', label: 'Link 3D resmi Geely (boleh kosong)', lower: true, hint: 'Tempel alamat halaman 3D di situs Geely, contoh https://global.geely.com/digital/3d/en/ex2. Website menampilkan tombol yang membuka halaman itu di tab baru, sehingga website Anda tetap terbuka.' },
     { key: 'galeri', label: 'Galeri foto tambahan', type: 'list', addLabel: 'Tambah foto', of: { type: 'image', folder: 'model', size: { w: 1200, h: 900, txt: 'landscape 4:3' } } },
     { key: 'warna', label: 'Warna kartu (dipakai kalau belum ada foto)', type: 'color' }
   ]; };
@@ -1314,7 +1314,7 @@
   function normSettings(d) {
     var wa = String(d.whatsapp || '').replace(/[^0-9]/g, '');
     if (wa.charAt(0) === '0') wa = '62' + wa.slice(1);
-    if (wa.length < 9) throw new Error('Nomor WhatsApp belum benar. Contoh: 087710208822');
+    if (wa.length < 9) throw new Error('Nomor WhatsApp belum benar. Contoh: 08123456789');
     d.whatsapp = wa; return d;
   }
 

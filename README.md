@@ -17,7 +17,7 @@ Buka `https://USERNAME.github.io/geely-website/admin/`
 | **Delivery** | Foto serah terima unit (judul, nama pelanggan, model, tanggal). Tampil di Beranda dan menu Delivery. Minta izin pelanggan dulu. |
 | **Testimoni** | Nama, isi testimoni, bintang, foto, model. Tampil di Beranda dan menu Testimoni. Pakai testimoni asli saja. |
 | **Isi Halaman** | Tulisan di Beranda (poin singkat, keunggulan, FAQ, judul tiap bagian), halaman Model, Promo, Delivery, Testimoni, Artikel, Kontak, **Pop up** (judul, isi, foto, tombol, detik muncul, aktif/nonaktif), dan footer. |
-| **Pengaturan** | Nama website, nama panggilan, profesi, nomor WhatsApp, pesan awal WA, email, sosmed (pilih platform, yang tampil hanya logonya), website lain (LapakMu, promogeelyauto.com), lokasi dealer, gambar saat link dibagikan. |
+| **Pengaturan** | Nama website, nama panggilan, profesi, nomor WhatsApp, pesan awal WA, email, sosmed (pilih platform, yang tampil hanya logonya), website lain (opsional), lokasi dealer, gambar saat link dibagikan. |
 
 ## Tampilan
 
@@ -85,7 +85,7 @@ Catatan: setelah website pertama kali tayang, tunggu 1-3 menit setiap kali seles
 2. Buka menu **Sitemaps**, kirim: `sitemap-index.xml`
 3. Untuk tiap artikel baru: **URL Inspection**, tempel alamat artikel, tekan **Request Indexing**.
 4. Tulis artikel rutin (minimal 1-2 per minggu) dengan judul yang menjawab pertanyaan calon pembeli, contoh: "Harga cicilan Geely EX5", "Perbandingan EX2 dan EX5".
-5. Pasang link website ini di bio Instagram, TikTok, YouTube, Threads dan Facebook, serta di website LapakMu dan promogeelyauto.com. Link balik (backlink) membantu Google menemukan dan mempercayai website baru.
+5. Pasang link website ini di bio Instagram, TikTok, YouTube, Threads dan Facebook. Link balik (backlink) membantu Google menemukan dan mempercayai website baru.
 6. Isi **Deskripsi untuk Google** di setiap artikel, model dan halaman dengan kalimat yang jelas (maks. 160 karakter).
 
 ## Video YouTube di artikel

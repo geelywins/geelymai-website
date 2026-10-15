@@ -1,17 +1,11 @@
-/* Tema: otomatis terang/gelap lewat atribut data-bs-theme (diatur skrip kecil di <head>) */
+/* Tema Geely MAI: putih bersih, modern, terang saja */
 :root {
-  --bg: #f4f7fb; --surface: #ffffff; --surface-2: #eef2f8; --text: #0f1722; --muted: #566277; --line: #e1e7f0;
-  --brand: #0f5bd7; --brand-soft: rgba(15, 91, 215, .1); --accent: #0a8f7a;
-  --wa: #1b8a50; --wa-hover: #167543; --wa-soft: #157a46;
-  --shadow: 0 8px 28px rgba(16, 36, 70, .08); --shadow-lg: 0 18px 44px rgba(16, 36, 70, .14);
-  --radius: 16px;
-  --bs-body-font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-}
-[data-bs-theme='dark'] {
-  --bg: #0a0e16; --surface: #121826; --surface-2: #0e1420; --text: #e8edf5; --muted: #9aa6ba; --line: #1f2a3b;
-  --brand: #4d9bff; --brand-soft: rgba(77, 155, 255, .14); --accent: #2ec4a6;
-  --wa: #218a52; --wa-hover: #2a9e60; --wa-soft: #5ccf92;
-  --shadow: 0 8px 28px rgba(0, 0, 0, .35); --shadow-lg: 0 18px 44px rgba(0, 0, 0, .5);
+  --bg: #ffffff; --surface: #ffffff; --surface-2: #f6f8fa; --text: #101828; --muted: #5b6677; --line: #e6eaf0;
+  --brand: #0a2a5e; --brand-soft: rgba(10, 42, 94, .07); --accent: #00a389;
+  --wa: #12805c; --wa-hover: #0e6a4c; --wa-soft: #0e6a4c;
+  --shadow: 0 1px 2px rgba(16, 24, 40, .05), 0 6px 18px rgba(16, 24, 40, .05); --shadow-lg: 0 2px 4px rgba(16, 24, 40, .05), 0 18px 40px rgba(16, 24, 40, .10);
+  --radius: 10px;
+  --bs-body-font-family: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
 }
 html { scroll-behavior: smooth; }
 body { background: var(--bg); color: var(--text); line-height: 1.65; -webkit-font-smoothing: antialiased; }
@@ -364,3 +358,51 @@ a.card-x { text-decoration: none !important; }
 .link3d { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: space-between; margin: 1.25rem 0; padding: 1.1rem 1.25rem; border: 1px solid var(--line, #dde5f0); border-radius: 16px; background: var(--surface, #fff); }
 .link3d p { margin: .25rem 0 0; font-size: .9rem; color: var(--muted, #6b7b95); max-width: 52ch; }
 .link3d .btn { min-height: 48px; }
+
+
+/* ===== Penyegaran tampilan Geely MAI (putih bersih modern) ===== */
+body { font-family: var(--bs-body-font-family); letter-spacing: -.003em; }
+h1, h2, h3, h4 { font-weight: 700; letter-spacing: -.025em; }
+.site-header { background: rgba(255, 255, 255, .92); border-bottom: 1px solid var(--line); }
+.brand-sub { letter-spacing: .08em; text-transform: none; font-size: .82rem; font-weight: 600; }
+.nav-link { font-weight: 500; border-radius: 8px; }
+.nav-link.active { color: var(--brand); font-weight: 700; }
+.btn { border-radius: 8px; font-weight: 600; letter-spacing: -.005em; }
+.btn-brand { background: var(--brand); color: #fff; }
+.btn-brand:hover { background: #0d3578; filter: none; box-shadow: 0 6px 16px rgba(10, 42, 94, .22); }
+.btn-outline-x { border: 1px solid var(--line); color: var(--text); background: #fff; }
+.btn-outline-x:hover { border-color: var(--text); background: var(--text); color: #fff; }
+
+/* Slider terang */
+.hero-slider { color: var(--text); background: #f6f8fa; border-bottom: 1px solid var(--line); height: clamp(460px, 46vw, 620px); }
+.slide-bg { background: radial-gradient(900px 480px at 85% 30%, color-mix(in srgb, var(--c) 14%, #fff), transparent 65%), linear-gradient(180deg, #ffffff, #f2f5f9); }
+.slide-shade { background: linear-gradient(90deg, rgba(255, 255, 255, .94) 0%, rgba(255, 255, 255, .72) 48%, rgba(255, 255, 255, 0) 100%); }
+.slide .eyebrow { background: var(--brand-soft); border: 0; color: var(--brand); border-radius: 6px; letter-spacing: .08em; }
+.slide h1, .slide h2.slide-title { color: var(--text); font-weight: 800; letter-spacing: -.035em; }
+.slide h1 em, .slide h2.slide-title em { color: var(--brand); filter: none; background: linear-gradient(transparent 68%, color-mix(in srgb, var(--accent) 28%, transparent) 68%); }
+.slide p { color: var(--muted); }
+.slide .btn-outline-x { background: #fff; border-color: var(--line); color: var(--text); }
+.slide .btn-outline-x:hover { background: var(--text); color: #fff; border-color: var(--text); }
+.dot { background: rgba(16, 24, 40, .2); }
+.dot[aria-current='true'] { background: var(--brand); }
+.arrow { border: 1px solid var(--line); background: #fff; color: var(--text); backdrop-filter: none; box-shadow: var(--shadow); }
+.arrow:hover { background: var(--text); color: #fff; }
+.slider-bar { background: var(--accent); height: 2px; }
+@media (max-width: 575.98px) { .slide-shade { background: linear-gradient(0deg, rgba(255, 255, 255, .96), rgba(255, 255, 255, .6)); } }
+
+/* Statistik, kartu, kepala halaman */
+.stat { border-radius: var(--radius); box-shadow: var(--shadow); border-top: 3px solid var(--accent); }
+.stat b { color: var(--text); font-weight: 700; }
+.sec-head h2 { font-weight: 700; letter-spacing: -.03em; }
+.page-head { background: var(--surface-2); }
+.page-head h1 { font-weight: 800; letter-spacing: -.035em; }
+.card-x { border-radius: var(--radius); box-shadow: none; }
+.card-x:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: var(--text); }
+.card-title-x { font-weight: 700; letter-spacing: -.02em; }
+.model-hero { border-radius: var(--radius); }
+.site-footer { background: #0b1220; border-top: 0; color: #a7b0bf; }
+.site-footer h4 { color: #fff; }
+.site-footer a { color: #a7b0bf; }
+.site-footer a:hover { color: #fff; }
+.site-footer p b { color: #fff; }
+.site-footer .brand-logo { color: #fff; }

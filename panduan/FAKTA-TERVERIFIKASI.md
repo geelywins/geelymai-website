@@ -8,7 +8,7 @@ Semua angka jarak/pengisian/konsumsi adalah KLAIM PABRIKAN (NEDC/WLTP), bukan ha
 ## Penjual dan dealer
 - Dealer: Geely MAI (wilayah Jakarta). Nama situs: Geely MAI Jakarta. Satu-satunya lokasi yang boleh ditulis. Jangan menyebut lokasi lain kecuali pemilik menambahkannya.
   Alamat jalan dan jam buka BELUM diisi: jangan ditulis sampai pemilik mengisinya di admin (Pengaturan).
-- WhatsApp: 087710208822. Konsultasi gratis, test drive, simulasi kredit. Harga & promo selalu berubah.
+- WhatsApp: diisi pemilik di admin (Pengaturan), jangan ditulis di artikel. Konsultasi gratis, test drive, simulasi kredit. Harga & promo selalu berubah.
 - Alamat halaman internal yang boleh ditautkan: /model/geely-ex2/, /model/geely-ex5/, /model/geely-starray/,
   /model/geely-starray-em-i/, /model/, /promo/, /kontak/, /delivery/, /testimoni/, /lokasi/geely-mai-jakarta/,
   /artikel/, /lp/, serta /artikel/<slug>/ dan /lp/<slug>/ yang ada di src/data/topik.json.

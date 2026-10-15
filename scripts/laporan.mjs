@@ -15,7 +15,7 @@ const DOMAIN = readCname();
 const SITE = (process.env.LAPORAN_SITE || (DOMAIN ? `https://${DOMAIN}` : '')).replace(/\/$/, '');
 const TOKEN_URL = process.env.GSC_TOKEN_URL || 'https://oauth2.googleapis.com/token';
 const GSC_API = process.env.GSC_API || 'https://www.googleapis.com/webmasters/v3';
-const UA = { 'user-agent': 'Mozilla/5.0 (compatible; wins-geely-laporan)' };
+const UA = { 'user-agent': 'Mozilla/5.0 (compatible; geely-mai-laporan)' };
 
 const todayJkt = () => new Date(Date.now() + 7 * 3600e3).toISOString().slice(0, 10);
 const log = (...a) => console.log(...a);

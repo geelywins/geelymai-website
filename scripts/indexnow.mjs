@@ -10,7 +10,7 @@ const endpoint = process.env.INDEXNOW_ENDPOINT || 'https://api.indexnow.org/inde
 const stateFile = '.indexnow/hashes.json';
 
 async function get(u) {
-  const r = await fetch(u + (u.includes('?') ? '&' : '?') + 'nc=' + Date.now(), { headers: { 'user-agent': 'wins-geely-indexnow' } });
+  const r = await fetch(u + (u.includes('?') ? '&' : '?') + 'nc=' + Date.now(), { headers: { 'user-agent': 'geely-mai-indexnow' } });
   if (!r.ok) throw new Error(`${r.status} ${u}`);
   return r.text();
 }

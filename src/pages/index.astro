@@ -78,13 +78,6 @@ const bg = () => ((alt = !alt) ? 'sec-alt' : '');
 
   <section class="stats-strip">
     <div class="container">
-      <div class="profile-chip reveal">
-        {SITE.photo
-          ? <img src={asset(SITE.photo)} alt={`Foto ${SITE.person}`} width="56" height="56" loading="eager" decoding="async" />
-          : <span class="pc-ph" aria-hidden="true">{SITE.nickname.slice(0, 1).toUpperCase()}</span>}
-        <div class="pc-t"><b>{SITE.person}</b><span>{SITE.job}{SITE.greet && <span class="pc-greet"> · {SITE.greet}</span>}</span></div>
-        <a class="pc-wa" href={wa} target="_blank" rel="noopener" aria-label="Chat WhatsApp"><Icon name="whatsapp" size={18} /><span>Chat</span></a>
-      </div>
       <div class="stats-grid">
       {B.stats.map((s, i) => <div class="stat reveal" style={`--d:${i * 0.08}s`}><b>{s.angka}</b><span>{s.teks}</span></div>)}
     </div></div>

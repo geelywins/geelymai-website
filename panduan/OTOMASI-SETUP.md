@@ -27,7 +27,7 @@ Token GitHub perlu izin: Contents (Read and write), Workflows (Read and write), 
 
 ## Langkah 3 - Posting artikel baru ke Telegram (gratis, tanpa n8n)
 Setiap ada artikel baru tayang, Anda menerima gambar sampul + caption siap salin + link di Telegram. Tinggal salin dan posting ke FB/IG.
-1. Buka Telegram, cari **@BotFather**, kirim `/newbot`. Isi nama bot (misal Geely MAI Bot) lalu username yang berakhiran `bot` (misal winsgeely_bot).
+1. Buka Telegram, cari **@BotFather**, kirim `/newbot`. Isi nama bot (misal Geely MAI Bot) lalu username yang berakhiran `bot` (misal geelymai_bot).
 2. BotFather membalas **token** (bentuknya `123456789:AAH...`). Salin.
 3. Buka bot Anda yang baru dibuat (klik link dari BotFather), tekan **Start**, kirim satu pesan apa saja (misal "halo").
 4. Cari chat ID: buka di browser `https://api.telegram.org/bot<TOKEN>/getUpdates` (ganti `<TOKEN>` dengan token tadi). Cari tulisan `"chat":{"id":` lalu salin angkanya (misal 123456789).

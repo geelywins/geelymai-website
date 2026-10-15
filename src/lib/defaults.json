@@ -1,62 +1,20 @@
 {
   "settings": {
     "namaSitus": "Geely MAI Jakarta",
-    "namaPanggilan": "Wins",
-    "namaLengkap": "Edwin Sowita S.",
-    "profesi": "Sales Mobil Geely",
-    "tagline": "Sales Consultant Geely MAI Jakarta",
-    "deskripsi": "Konsultan penjualan Geely di Jakarta. Info harga, promo, simulasi kredit dan test drive Geely EX2, EX5, Starray dan model lainnya.",
+    "namaPanggilan": "Tim Geely MAI",
+    "namaLengkap": "Geely MAI Jakarta",
+    "profesi": "Dealer Geely Jakarta",
+    "tagline": "Dealer Geely MAI Jakarta",
+    "deskripsi": "Dealer Geely MAI di Jakarta. Info Geely EX2, EX5 dan Starray EM-i, jadwal test drive, simulasi kredit, dan penawaran terbaru langsung dari tim kami.",
     "dealer": "Geely MAI",
-    "whatsapp": "6287710208822",
-    "pesanWa": "Halo Kak Wins, saya tertarik dengan mobil Geely. Boleh minta info harga dan promo terbaru?",
+    "whatsapp": "",
+    "pesanWa": "Halo Geely MAI, saya tertarik dengan mobil Geely. Boleh minta info lengkap dan penawaran terbaru?",
     "email": "",
     "ogImage": "/og-default.png",
     "fotoProfil": "",
-    "sapaanProfil": "Konsultan Anda untuk Geely",
-    "sosmed": [
-      {
-        "platform": "Instagram",
-        "label": "@geelywins",
-        "url": "https://www.instagram.com/geelywins"
-      },
-      {
-        "platform": "Threads",
-        "label": "@geelywins",
-        "url": "https://www.threads.com/@geelywins"
-      },
-      {
-        "platform": "YouTube",
-        "label": "@geelywindps",
-        "url": "https://www.youtube.com/@geelywindps"
-      },
-      {
-        "platform": "TikTok",
-        "label": "@geely.auto.bsd",
-        "url": "https://www.tiktok.com/@geely.auto.bsd"
-      },
-      {
-        "platform": "TikTok",
-        "label": "@geelywinss",
-        "url": "https://www.tiktok.com/@geelywinss"
-      },
-      {
-        "platform": "Facebook",
-        "label": "Geely wins",
-        "url": ""
-      }
-    ],
-    "situsLain": [
-      {
-        "nama": "LapakMu",
-        "url": "https://lapakmu.store",
-        "deskripsi": "Toko online aksesoris mobil dan produk pilihan"
-      },
-      {
-        "nama": "Promo Geely Auto",
-        "url": "https://promogeelyauto.com",
-        "deskripsi": "Website promo dan info Geely"
-      }
-    ],
+    "sapaanProfil": "",
+    "sosmed": [],
+    "situsLain": [],
     "lokasi": [
       {
         "nama": "Geely MAI Jakarta",
@@ -68,8 +26,8 @@
     "beranda": {
       "stats": [
         {
-          "angka": "2 Lokasi",
-          "teks": "Jakarta"
+          "angka": "Dealer Jakarta",
+          "teks": "Geely MAI"
         },
         {
           "angka": "Test Drive",
@@ -83,17 +41,17 @@
       "modelJudul": "Pilihan Model Geely",
       "modelTeks": "Dari mobil listrik kompak sampai SUV hybrid, pilih yang paling cocok dengan kebutuhan Anda.",
       "promoJudul": "Promo Geely Terbaru",
-      "promoTeks": "Penawaran yang sedang berlaku. Tanyakan syarat dan ketentuannya ke saya.",
+      "promoTeks": "Penawaran yang sedang berlaku. Tanyakan syarat dan ketentuannya ke tim kami.",
       "deliveryJudul": "Momen Serah Terima Unit",
       "deliveryTeks": "Kebahagiaan pelanggan saat menerima kunci Geely barunya.",
       "testimoniJudul": "Kata Pelanggan",
-      "testimoniTeks": "Cerita dari pelanggan yang sudah membeli Geely lewat saya.",
-      "keunggulanJudul": "Kenapa beli lewat saya?",
+      "testimoniTeks": "Cerita dari pelanggan yang sudah membeli Geely di Geely MAI.",
+      "keunggulanJudul": "Kenapa memilih Geely MAI?",
       "keunggulan": [
         {
           "ikon": "💬",
           "judul": "Respon cepat",
-          "teks": "Tanya lewat WhatsApp, saya jawab langsung tanpa berbelit."
+          "teks": "Tanya lewat WhatsApp, tim kami menjawab langsung tanpa berbelit."
         },
         {
           "ikon": "💰",
@@ -103,7 +61,7 @@
         {
           "ikon": "🚗",
           "judul": "Test drive mudah",
-          "teks": "Atur jadwal sesuai waktu Anda di dealer terdekat."
+          "teks": "Atur jadwal sesuai waktu Anda di dealer Geely MAI."
         },
         {
           "ikon": "🤝",
@@ -117,11 +75,11 @@
       "faq": [
         {
           "tanya": "Bagaimana cara test drive Geely?",
-          "jawab": "Kirim pesan WhatsApp ke saya, sebutkan model dan jam yang Anda mau. Saya atur jadwal test drive di dealer Geely MAI, Jakarta."
+          "jawab": "Kirim pesan WhatsApp ke kami, sebutkan model dan jam yang Anda mau. Kami atur jadwal test drive di dealer Geely MAI, Jakarta."
         },
         {
           "tanya": "Apakah bisa simulasi kredit Geely?",
-          "jawab": "Bisa. Kirim pilihan model, besar DP dan tenor yang diinginkan lewat WhatsApp, lalu saya kirimkan simulasi cicilannya."
+          "jawab": "Bisa. Kirim pilihan model, besar DP dan tenor yang diinginkan lewat WhatsApp, lalu kami kirimkan simulasinya."
         },
         {
           "tanya": "Di mana lokasi dealer Geely?",
@@ -129,20 +87,20 @@
         }
       ],
       "ctaJudul": "Siap konsultasi?",
-      "ctaTeks": "Kirim pesan sekarang, saya bantu pilihkan model dan skema pembelian yang paling pas.",
+      "ctaTeks": "Kirim pesan sekarang, tim kami bantu pilihkan model dan skema pembelian yang paling pas.",
       "ctaTombol": "Chat WhatsApp Sekarang",
-      "seoJudul": "Geely EX2 Jakarta - Harga, Promo & Test Drive",
-      "seoDeskripsi": "Cari harga Geely EX2, EX5 dan Starray di Jakarta? Lihat promo terbaru, simulasi kredit dan jadwal test drive. Hubungi sales Geely sekarang!"
+      "seoJudul": "Dealer Geely Jakarta - EX2, EX5, Starray",
+      "seoDeskripsi": "Geely MAI Jakarta: pilih EX2, EX5 atau Starray EM-i, lihat promo terbaru, simulasi kredit dan jadwal test drive via WhatsApp."
     },
     "halamanModel": {
       "judul": "Model Mobil Geely",
-      "teks": "Pilih model yang sesuai kebutuhan Anda, lalu tanyakan harga dan promo terbaru ke saya.",
+      "teks": "Pilih model yang sesuai kebutuhan Anda, lalu tanyakan harga dan promo terbaru ke tim kami.",
       "seoDeskripsi": "Daftar lengkap mobil Geely: EX2, EX5, Starray dan Starray EM-i. Lihat keunggulan tiap model dan tanyakan harga serta promo terbaru."
     },
     "halamanPromo": {
       "judul": "Promo Geely Terbaru",
-      "teks": "Penawaran spesial yang sedang berlaku. Syarat dan ketentuan berlaku, silakan konfirmasi ke saya.",
-      "kosong": "Belum ada promo aktif saat ini. Hubungi saya untuk info penawaran terbaru.",
+      "teks": "Penawaran spesial yang sedang berlaku. Syarat dan ketentuan berlaku, silakan konfirmasi ke tim kami.",
+      "kosong": "Belum ada promo aktif saat ini. Hubungi kami untuk info penawaran terbaru.",
       "seoDeskripsi": "Promo Geely terbaru: diskon, bonus dan penawaran spesial mobil Geely EX2, EX5 dan Starray di Jakarta."
     },
     "halamanArtikel": {
@@ -152,8 +110,8 @@
     },
     "halamanTestimoni": {
       "judul": "Testimoni Pelanggan",
-      "teks": "Pengalaman nyata pelanggan yang membeli Geely lewat saya.",
-      "kosong": "Testimoni pelanggan akan segera hadir. Hubungi saya untuk konsultasi.",
+      "teks": "Pengalaman nyata pelanggan yang membeli Geely di Geely MAI.",
+      "kosong": "Testimoni pelanggan akan segera hadir. Hubungi kami untuk konsultasi.",
       "seoDeskripsi": "Testimoni pelanggan Geely: pengalaman membeli, test drive dan serah terima unit Geely EX2, EX5 dan Starray di Jakarta."
     },
     "halamanDelivery": {
@@ -163,7 +121,7 @@
       "seoDeskripsi": "Galeri delivery moment Geely: momen serah terima unit Geely EX2, EX5 dan Starray kepada pelanggan di Jakarta."
     },
     "kontak": {
-      "judul": "Hubungi Saya",
+      "judul": "Hubungi Geely MAI",
       "teks": "Cara tercepat adalah lewat WhatsApp. Sebutkan model yang Anda minati dan kebutuhan Anda.",
       "layananJudul": "Layanan",
       "layanan": [
@@ -172,17 +130,17 @@
         "Jadwal test drive",
         "Pendampingan sampai serah terima unit"
       ],
-      "seoDeskripsi": "Hubungi sales Geely lewat WhatsApp untuk tanya harga, promo, simulasi kredit dan test drive. Dealer Geely MAI di Jakarta."
+      "seoDeskripsi": "Hubungi Geely MAI Jakarta lewat WhatsApp untuk tanya harga, promo, simulasi kredit dan test drive Geely."
     },
     "footer": {
-      "catatan": "Website ini dikelola oleh sales consultant dealer resmi Geely. Harga, promo dan spesifikasi dapat berubah sewaktu-waktu, silakan konfirmasi ke sales."
+      "catatan": "Harga, promo dan spesifikasi dapat berubah sewaktu-waktu, silakan konfirmasi ke tim kami."
     },
     "popup": {
       "aktif": true,
       "tundaDetik": 8,
       "label": "Info Terbaru",
       "judul": "Mau test drive Geely?",
-      "teks": "Konsultasi dan simulasi kredit gratis. Hubungi saya sekarang, saya bantu pilihkan model dan skema yang paling pas.",
+      "teks": "Konsultasi dan simulasi kredit gratis. Hubungi kami sekarang, tim kami bantu pilihkan model dan skema yang paling pas.",
       "foto": "",
       "tombol": "Chat via WhatsApp",
       "link": "wa"
@@ -190,9 +148,9 @@
   },
   "slider": [
     {
-      "label": "Sales Consultant Geely - Jakarta",
-      "judul": "Mobil {Geely} modern, konsultasi mudah dan cepat.",
-      "teks": "Cari info harga, promo, simulasi kredit dan jadwal test drive Geely EX2, EX5, Starray dan model lainnya. Langsung tanya saya, respon cepat lewat WhatsApp.",
+      "label": "Dealer Geely - Jakarta",
+      "judul": "Mobil {Geely} masa kini, konsultasi mudah dan cepat.",
+      "teks": "Cari info harga, promo, simulasi kredit dan jadwal test drive Geely EX2, EX5 dan Starray EM-i. Tim Geely MAI siap menjawab lewat WhatsApp.",
       "foto": "",
       "tombol": "Tanya Harga & Promo",
       "link": "wa",

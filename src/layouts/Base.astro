@@ -50,10 +50,9 @@ const baseLd = {
   name: `${SITE.name} - ${SITE.dealer}`,
   description: SITE.description,
   url: new URL(href('/'), Astro.site).href,
-  telephone: `+${SITE.whatsapp}`,
+  ...(SITE.whatsapp ? { telephone: `+${SITE.whatsapp}` } : {}),
   areaServed: ['Jakarta'],
   brand: { '@type': 'Brand', name: 'Geely' },
-  employee: { '@type': 'Person', name: SITE.person, alternateName: SITE.nickname, jobTitle: SITE.job },
   address: SITE.locations.map((l) => ({
     '@type': 'PostalAddress',
     streetAddress: l.nama,
@@ -72,11 +71,13 @@ const lds = [baseLd, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
     <link rel="canonical" href={canonical} />
     <meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large'} />
-    <meta name="color-scheme" content="light dark" />
-    <meta name="theme-color" content="#f6f8fb" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#0a0e16" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#ffffff" />
     <link rel="icon" href={href('/favicon.ico?v=2')} sizes="any" />
     <link rel="icon" type="image/png" sizes="16x16" href={href('/favicon-16.png?v=2')} />
     <link rel="icon" type="image/png" sizes="32x32" href={href('/favicon-32.png?v=2')} />
@@ -99,15 +100,7 @@ const lds = [baseLd, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : 
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
 
-    <!-- Mode gelap/terang otomatis mengikuti pengaturan HP/laptop -->
-    <script is:inline>
-      (function () {
-        var d = document.documentElement, m = window.matchMedia('(prefers-color-scheme: dark)');
-        function set() { d.setAttribute('data-bs-theme', m.matches ? 'dark' : 'light'); }
-        set(); d.classList.add('js');
-        if (m.addEventListener) m.addEventListener('change', set);
-      })();
-    </script>
+    <script is:inline>document.documentElement.classList.add('js');</script>
 
     {lds.map((ld) => <script type="application/ld+json" set:html={JSON.stringify(ld)} />)}
   </head>
@@ -144,8 +137,8 @@ const lds = [baseLd, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : 
         <div class="row g-4">
           <div class="col-12 col-lg-4">
             <span class="brand-logo foot-logo" style={`--logo:url(${logoUrl})`} role="img" aria-label="Geely"></span>
-            <p class="mt-3 mb-1"><b>{SITE.person}</b> ({SITE.nickname})<br />{SITE.job}<br />{SITE.dealer}</p>
-            <p class="mb-3">WhatsApp: <a href={waLink()} target="_blank" rel="noopener">{phoneDisplay}</a></p>
+            <p class="mt-3 mb-1"><b>{SITE.name}</b><br />{SITE.job}</p>
+            {phoneDisplay && <p class="mb-3">WhatsApp: <a href={waLink()} target="_blank" rel="noopener">{phoneDisplay}</a></p>}
             <SocialIcons items={SITE.sosmed} size={20} />
           </div>
           <div class="col-6 col-lg-3">
@@ -158,10 +151,10 @@ const lds = [baseLd, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : 
             {footLps.length > 0 && (<><h4 class="mt-3">Panduan</h4>
             <ul class="list-unstyled">{footLps.map((l) => <li><a href={href(`/lp/${l.id}/`)}>{l.data.title.split(':')[0]}</a></li>)}</ul></>)}
           </div>
-          <div class="col-12 col-lg-3">
+          {SITE.situsLain.length > 0 && (<div class="col-12 col-lg-3">
             <h4>Website Lain</h4>
             <ul class="list-unstyled">{SITE.situsLain.map((s) => <li><a href={s.url} target="_blank" rel="noopener">{s.nama}</a></li>)}</ul>
-          </div>
+          </div>)}
         </div>
         <p class="copy">&copy; {new Date().getFullYear()} {SITE.name}. {CONTENT.footer.catatan}</p>
       </div>
